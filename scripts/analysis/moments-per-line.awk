@@ -1,79 +1,67 @@
 # $Id: moments.gawk,v 1.1 2001/05/13 07:09:06 doug Exp $
-# http://www.bagley.org/~doug/shootout/
+# Based on code from http://www.bagley.org/~doug/shootout/
+#
+# Called with '-v skip=<nr>' will skip column <nr>, otherwise all columns
+# are included.
+# If -v prepend=true is also specified, prepends the skipped column to the output. The
+# setting of prepend is ignored if skip is undefined
+#
 
 BEGIN{
-    print "#time n median loQ hiQ mean avg_dev std_dev conf_lo conf_hi";
+	if (skip > 0 && prepend)
+	    print "#skipped n median low_quartile hi_quartile mean avg_dev std_dev vari skew kurt conf_lo conf_hi";
+	else
+	    print "#n median low_quartile hi_quartile mean avg_dev std_dev vari skew kurt conf_lo conf_hi";
 }
 {
     sum = 0;
     n = 0;
+    avg_dev = 0;
+    vari = 0;
+    skew = 0;
+    kurt = 0;
+    delete nums;
 
-    for (i=2; i <= NF; i++)
+    for (i=1; i <= NF; i++)
     {
-        nums[n++] = $(i);
-        sum += $(i);
-    } 
+    	if (i != skip)
+    	{
+        	nums[n++] = $(i);
+        	sum += $(i);
+        }
+    }
 
-	if (n > 1)
-	{
-		mean = sum/n;
-		for (num in nums) {
+    mean = sum/n;
+
+    for (num in nums) {
 		dev = nums[num] - mean;
-		if (dev > 0) { avg_dev += dev; } else { avg_dev -= dev; }
+		avg_dev += (dev > 0) ? dev : -dev;
 		vari += dev^2;
 		skew += dev^3;
 		kurt += dev^4;
-		}
-		
-		avg_dev /= n;
-		vari /= (n - 1);
-		std_dev = sqrt(vari);
-	
-		nums[n] = nums[0];
-		heapsort(n, nums);
-	
-		mid = int(n/2)+1;
-		median = (n % 2) ? nums[mid] : (nums[mid] + nums[mid-1])/2;
-		
-		q1 = int(mid/2)+1;
-		loQ = (mid % 2) ? nums[q1] : (nums[q1] + nums[q1-1])/2;
-		hiQ = (mid % 2) ? nums[mid+q1] : (nums[mid+q1] + nums[mid+q1-1])/2;
-	} else {
-		median = loQ = hiQ = mean = sum;
-		avg_dev = std_dev = vari = 0;
-	}
-	
-    median_ci_lower = int(n * 0.5 - 1.96 * sqrt(n * 0.5 * (1-0.5))) + 1 
-    median_ci_upper = int(n * 0.5 + 1.96 * sqrt(n * 0.5 * (1-0.5))) + 1 
-
-	print $1,n,median,loQ,hiQ,mean,avg_dev,std_dev,nums[median_ci_lower],nums[median_ci_upper];
-}
-
-function heapsort (n, ra) {
-    l = int(0.5+n/2) + 1
-    ir = n;
-    for (;;) {
-        if (l > 1) {
-            rra = ra[--l];
-        } else {
-            rra = ra[ir];
-            ra[ir] = ra[1];
-            if (--ir == 1) {
-                ra[1] = rra;
-                return;
-            }
-        }
-        i = l;
-        j = l * 2;
-        while (j <= ir) {
-            if (j < ir && ra[j] < ra[j+1]) { ++j; }
-            if (rra < ra[j]) {
-                ra[i] = ra[j];
-                j += (i = j);
-            } else {
-                j = ir + 1;
-            }
-        }
-        ra[i] = rra;
     }
+    avg_dev /= n;
+    vari /= (n - 1);
+    std_dev = sqrt(vari);
+
+    if (vari != 0) {
+		skew /= (n * vari * std_dev);
+		kurt = kurt/(n * vari * vari) - 3.0;
+    }
+
+    asort(nums);
+
+    mid = int(n/2)+1;
+    median = (n % 2) ? nums[mid] : (nums[mid] + nums[mid-1])/2;
+    quart = int(mid/2)+1;
+    lowquartile = (n % 4) ? nums[quart] : (nums[quart] + nums[quart-1])/2;
+    hiquartile = (n % 4) ? nums[mid+quart] : (nums[mid+quart] + nums[mid+quart-1])/2;
+
+    median_ci_lower = int(n * 0.5 - 1.96 * sqrt(n * 0.5 * (1-0.5))) + 1
+    median_ci_upper = int(n * 0.5 + 1.96 * sqrt(n * 0.5 * (1-0.5))) + 1
+
+	if (skip > 0 && prepend)
+	    print $(skip), n, median, lowquartile, hiquartile, mean, avg_dev, std_dev, vari, skew, kurt, nums[median_ci_lower], nums[median_ci_upper];
+	else
+	    print n, median, lowquartile, hiquartile, mean, avg_dev, std_dev, vari, skew, kurt, nums[median_ci_lower], nums[median_ci_upper];
 }
