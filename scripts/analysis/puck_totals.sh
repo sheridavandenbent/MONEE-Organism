@@ -22,6 +22,6 @@ do
   )  >> ${RESULTS}-total
 done
 
-sort -n $RESULTS-total | awk -f ${BASEDIR}/moments-per-line.awk > ${RESULTS}-total.stats
+sort -n $RESULTS-total | awk  -v skip=1 -v prepend=true -f moments-per-line.awk > ${RESULTS}-total.stats
 
 #echo Done.

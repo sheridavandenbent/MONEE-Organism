@@ -16,8 +16,8 @@ for i in $@
 do
   pushd $i
   (
-    awk -v col=3 -f ${BASEDIR}/pucks-vs-age.awk *.pressure-stats | sort -n -k 1 | awk -f ../../../../moments-per-line.awk > pucks-vs-age.0
-    awk -v col=4 -f ${BASEDIR}/pucks-vs-age.awk *.pressure-stats | sort -n -k 1 | awk -f ../../../../moments-per-line.awk > pucks-vs-age.1
+    awk -v col=3 -f ${BASEDIR}/pucks-vs-age.awk *.pressure-stats | sort -n -k 1 | awk -v skip=1 -v prepend=true -f moments-per-line.awk > pucks-vs-age.0
+    awk -v col=4 -f ${BASEDIR}/pucks-vs-age.awk *.pressure-stats | sort -n -k 1 | awk -v skip=1 -v prepend=true -f moments-per-line.awk > pucks-vs-age.1
   )&
  	
   popd

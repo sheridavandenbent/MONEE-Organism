@@ -32,4 +32,4 @@ do
 	mv ${PASTE_BUFFER} ${RESULTS}
 done
 
-awk -f ${BASEDIR}/moments-per-line.awk $RESULTS > ${RESULTS}.stats
+awk -v skip=1 -v prepend=true -f moments-per-line.awk $RESULTS > ${RESULTS}.stats

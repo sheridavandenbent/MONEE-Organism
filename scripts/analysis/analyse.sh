@@ -17,9 +17,9 @@ DEFINE_string 'iterations' '1000000' 'Number of iterations' 'i'
 FLAGS "$@" || exit 1
 eval set -- "${FLAGS_ARGV}"
 
-#DIR=`readlink -fn $0`
-#BASEDIR=`dirname $DIR`
-BASEDIR=$HOME/monee/results
+DIR=`readlink -fn $0`
+BASEDIR=`dirname $DIR`
+#BASEDIR=$HOME/monee/results
 
 for i in $@
 do
@@ -30,6 +30,7 @@ do
    bash ${BASEDIR}/count-inseminations.sh --iterations ${FLAGS_iterations}
    bash ${BASEDIR}/count-offspring.sh
    bash ${BASEDIR}/analyse-pressure.sh
+   bash ${BASEDIR}/ages.sh
   )&
   popd
 done

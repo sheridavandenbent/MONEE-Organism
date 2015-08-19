@@ -2,7 +2,7 @@
 
 # Generate png plots for monee runs analysis
 
-SCRIPT_DIR=$HOME/monee/results
+SCRIPT_DIR=$HOME/monee/results/analyse
 
 
 for i in $@

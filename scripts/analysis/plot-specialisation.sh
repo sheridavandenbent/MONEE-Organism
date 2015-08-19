@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SCRIPT_DIR=$HOME/monee/results
+SCRIPT_DIR=$HOME/monee/results/analyse
 
 for i in $@
 do
