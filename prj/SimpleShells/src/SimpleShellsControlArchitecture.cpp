@@ -150,6 +150,7 @@ std::cout << "Tournament size: " << _tournamentSize << std::endl;
 
 SimpleShellsControlArchitecture::~SimpleShellsControlArchitecture() {
 	// nothing to do.
+	reset();
 }
 
 
