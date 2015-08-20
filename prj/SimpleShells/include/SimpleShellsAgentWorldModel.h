@@ -22,7 +22,8 @@ class SimpleShellsAgentWorldModel : public RobotAgentWorldModel {
         double _speedPenalty;   /// < Speed multiplication factor between 0 and 1 (1: no penalty)
         double _specialisation; /// < Speed penalty exponent, set through config file
         int _energyPuckId;      /// < Id of puck type that gives energy, this can be disregarded as a task (defaults to -1, set through config file)
-	bool _excludeEnergyPucks; /// < If true, pucks of type _energyPuckId are disregarded as a task, if false, energy pucks also count as task (defaults to true)
+        bool _fixedBoost;    /// < If true, energy boost is a percentage of original lifetime, otherwise (the default) a percentage of remaining lifetime
+        bool _excludeEnergyPucks; /// < If true, pucks of type _energyPuckId are disregarded as a task, if false, energy pucks also count as task (defaults to true)
         double _energyBoost;     /// < Percentage to add to lifetime when picking up an energy puck. Default 5, set through config file
         int _maxNrBoosts;		/// < Maximum number of lifetime boosts. Default 10, set through config file.
         int _nrBoosts;		    /// < Number of lifetime boosts experienced.
@@ -57,6 +58,8 @@ class SimpleShellsAgentWorldModel : public RobotAgentWorldModel {
         /// Clears WM information to start a new life.
         void reset(int maxLifetime[]);
 
+	private:
+        double _maxLifetime; /// < The original maximum lifetime as determined in reset()
 
 };
 

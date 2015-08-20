@@ -21,6 +21,7 @@ DEFINE_integer 'energyPuckId' '-1' 'Which pucktype is used as energy point inste
 DEFINE_float 'energyBoost' '0.25' 'Lifetime boost from energy punk (ratio)'
 DEFINE_integer 'tournamentSize' '2' 'Size of tournament for parent selection. Values smaller than 2 imply rank-based roulettewheel selection (which was default before 18 Jun 2014)'
 DEFINE_boolean 'excludeEnergyPucks' true 'Exclude energy pucks from task and fitness calculations'
+DEFINE_boolean 'fixedBoost' false 'If true, energy boost is a percentage of original lifetime, otherwise (the default) a percentage of remaining lifetime'
 
 # Parse the flags
 FLAGS "$@" || exit 1
@@ -83,6 +84,12 @@ else
   EXCLUDEENERGYREP=s/--EXCLUDE_ENERGY_PUCKS/false/g
 fi
 
+if [ ${FLAGS_fixedBoost} -eq ${FLAGS_TRUE} ]; then
+  FIXEDENERGYREP=s/--FIXED_ENERGYBOOST/true/g
+else
+  FIXEDENERGYREP=s/--FIXED_ENERGYBOOST/false/g
+fi
+
 # Fill out and place the configuration file
 sed -e $USERANDSELREP \
     -e $USEMARKETREP  \
@@ -98,6 +105,7 @@ sed -e $USERANDSELREP \
     -e $EXCLUDEENERGYREP \
     -e $ENERGYBOOSTREP \
     -e $TOURNAMENTSIZEREP \
+    -e $FIXEDENERGYREP \
     -e $EGGTIMEREP ${TEMPLATEDIR}/${CONFNAME}.properties > ${CONFFILE}
 
 if [ $? -ne 0 ]

@@ -13,6 +13,7 @@ SimpleShellsAgentWorldModel::SimpleShellsAgentWorldModel() {
 	_nrBoosts = 0;
 	_energyPuckId = -1;
 	_energyBoost = 0.05;
+	_fixedBoost = false;
 	_maxNrBoosts = 10;
 	_excludeEnergyPucks = true;
 
@@ -24,6 +25,7 @@ SimpleShellsAgentWorldModel::SimpleShellsAgentWorldModel() {
 
 	gProperties.checkAndGetPropertyValue("gSpecialisation", &_specialisation, false);
 	gProperties.checkAndGetPropertyValue("energyBoost", &_energyBoost, false);
+	gProperties.checkAndGetPropertyValue("fixedBoost", &_fixedBoost, false);
 	gProperties.checkAndGetPropertyValue("maxNrBoost", &_maxNrBoosts, false);
 	gProperties.checkAndGetPropertyValue("energyPuckId", &_energyPuckId, false);
 	gProperties.checkAndGetPropertyValue("excludeEnergyPucks", &_excludeEnergyPucks, false);
@@ -69,7 +71,13 @@ void SimpleShellsAgentWorldModel::collectPuck(int g) {
 		if (_nrBoosts < _maxNrBoosts) {
 			// add lifetime
 			std::cout << "energy puck " << _nrBoosts +1 << " lifetime from " << _lifetime[PHASE_GATHERING];
-			_lifetime[PHASE_GATHERING] += int(double(_lifetime[PHASE_GATHERING]) * _energyBoost);
+
+			int boost = 0;
+			if (_fixedBoost)
+				boost = int(double(_maxLifetime) * _energyBoost);
+			else
+				boost = int(double(_lifetime[PHASE_GATHERING]) * _energyBoost);
+			_lifetime[PHASE_GATHERING] += boost;
 			std::cout << " to " << _lifetime[PHASE_GATHERING] << '\n';
 		}
 		_nrBoosts++;
@@ -83,7 +91,7 @@ void SimpleShellsAgentWorldModel::collectPuck(int g) {
 
 void SimpleShellsAgentWorldModel::reset(int maxLifetime[]) {
 	// Somewhat random lifetime to prevent synchronised life cycles
-	_lifetime[PHASE_GATHERING] = maxLifetime[PHASE_GATHERING] * (ranf() * 0.25 + 0.75);
+	_lifetime[PHASE_GATHERING] = _maxLifetime = maxLifetime[PHASE_GATHERING] * (ranf() * 0.25 + 0.75);
 	_lifetime[PHASE_MATING] = maxLifetime[PHASE_MATING];
 
 	// Remove all gathered genomes from the gene pool
