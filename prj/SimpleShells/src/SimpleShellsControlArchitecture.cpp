@@ -150,25 +150,12 @@ std::cout << "Tournament size: " << _tournamentSize << std::endl;
 
 SimpleShellsControlArchitecture::~SimpleShellsControlArchitecture() {
 	// nothing to do.
-	reset();
 }
 
 
 void SimpleShellsControlArchitecture::reset() {
-	// 
-	// Dump lifetime stats: time, ID, amount of pucks gathered, distance covered, lifetime
-	//
-	std::cout << "[gathered] " << _wm->_world->getIterations() << ' ' << _activeGenome.id;
-	for (int i = 0; i < _activeGenome.pucks.size(); ++i) {
-		if (i == _wm->_energyPuckId && _wm->_excludeEnergyPucks)
-			std::cout << ' ' << _wm->_nrBoosts;
-		else 
-			std::cout << ' ' << _activeGenome.pucks[i];
-	}
 
-	std::cout << ' ' << _activeGenome._distance;
-	std::cout << ' ' << _age;
-	std::cout << '\n';
+	logStats();
 
 	_wm->reset(_maxLifetime);
         _age = 0;
@@ -183,6 +170,30 @@ void SimpleShellsControlArchitecture::reset() {
 
 	std::cout << "[descendant] " <<  _wm->_world->getIterations() << ' ' << _wm->_winnerId << ' ' << _activeGenome.id << '\n';
 }
+
+void SimpleShellsControlArchitecture::logStats()
+{
+	//
+        // Dump lifetime stats: time, ID, amount of pucks gathered, distance covered, lifetime
+        //
+        std::cout << "[gathered] " << _wm->_world->getIterations() << ' ' << _activeGenome.id;
+        for (int i = 0; i < _activeGenome.pucks.size(); ++i) {
+                if (i == _wm->_energyPuckId && _wm->_excludeEnergyPucks)
+                        std::cout << ' ' << _wm->_nrBoosts;
+                else
+                        std::cout << ' ' << _activeGenome.pucks[i];
+        }
+
+        std::cout << ' ' << _activeGenome._distance;
+        std::cout << ' ' << _age;
+        std::cout << '\n';
+}
+
+
+void SimpleShellsControlArchitecture::prepareShutdown() {
+	logStats();
+}
+    
 
 /* obsolete */
 double getSpecDeg(std::vector<int> & counts) {
@@ -435,6 +446,15 @@ void SimpleShellsControlArchitecture::step() {
       std::cout << "Setting _task1Premium to " << _task1Premium << "\n";
     }
 	 */
+
+	//
+	// Random robot death
+	//
+	double randomDeathProb(1.5e-4);
+	if (_wm->_action == ACTION_GATHER && Rand::randouble() < randomDeathProb) {
+		_wm->_lifetime[PHASE_GATHERING] = 1;
+	}
+
 	bool done = false;
 	while (!done) {
 		switch (_wm->_action) {

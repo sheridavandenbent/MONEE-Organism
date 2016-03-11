@@ -45,13 +45,13 @@ class World
         
 	public:
         
-        Uint32 _colorChangeTarget;
-        int _colorChangeIteration;
+        	Uint32 _colorChangeTarget;
+        	int _colorChangeIteration;
 
 		World();
 		~World();
         
-        void doColorChange();
+        	void doColorChange();
 
 		bool loadFiles();
 		//bool loadProperties( std::string __propertiesFilename );
@@ -59,6 +59,9 @@ class World
 		void initWorld();
 		void resetWorld();
 		void updateWorld(Uint8 *__keyboardStates = NULL);
+
+		/// Opportunity for (famous) last words
+		void prepareShutdown();
 		
 		RobotAgentPtr getAgent( int __agentIndex );
 		//bool isAgentRegistered( int __agentIndex );

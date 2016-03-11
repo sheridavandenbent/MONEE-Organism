@@ -249,6 +249,14 @@ void RobotAgent::reset() {
 
 }
 
+void RobotAgent::prepareShutdown() {
+	// For consistency's sake, should also call :
+	// _wm->prepareShutdown();
+	// _agentObserver->prepareShutdown();
+	_behavior->prepareShutdown();
+}
+    
+
 void RobotAgent::callObserver() {
 	_agentObserver->step();
 }
@@ -597,7 +605,7 @@ bool RobotAgent::isCollision() {
 	if (isObjectCollision() || isAgentCollision())
 		collision = true;
 	// Update log on collision
-	if (collision) {
+	if (collision && gCollisionLogFile.is_open()) {
 		gCollisionLogFile << this->_wm->_world->getIterations() << " #" << this->_wm->_agentId << std::endl;
 	}
 	return collision;

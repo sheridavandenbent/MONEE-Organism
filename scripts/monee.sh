@@ -22,6 +22,7 @@ DEFINE_float 'energyBoost' '0.25' 'Lifetime boost from energy punk (ratio)'
 DEFINE_integer 'tournamentSize' '2' 'Size of tournament for parent selection. Values smaller than 2 imply rank-based roulettewheel selection (which was default before 18 Jun 2014)'
 DEFINE_boolean 'excludeEnergyPucks' true 'Exclude energy pucks from task and fitness calculations'
 DEFINE_boolean 'fixedBoost' false 'If true, energy boost is a percentage of original lifetime, otherwise (the default) a percentage of remaining lifetime'
+DEFINE_boolean 'logCollisions' true 'If true, collision info is logged in (large) separate log file. No collision logging otherwise'
 
 # Parse the flags
 FLAGS "$@" || exit 1
@@ -65,6 +66,7 @@ EGGTIMEREP=s/--MAXEGGTIME/${FLAGS_maxEggTime}/g
 ENERGYIDREP=s/--ENERGYPUCKID/${FLAGS_energyPuckId}/g
 ENERGYBOOSTREP=s/--ENERGYBOOST/${FLAGS_energyBoost}/g
 TOURNAMENTSIZEREP=s/--TOURNAMENT_SIZE/${FLAGS_tournamentSize}/g
+LOGCOLLISIONSREP=s/--LOG_COLLISIONS/${FLAGS_logCollisions}/g
 if [ ${FLAGS_market} -eq ${FLAGS_TRUE} ]; then
   USEMARKETREP=s/--USE_MARKET/true/g
 else
@@ -90,6 +92,12 @@ else
   FIXEDENERGYREP=s/--FIXED_ENERGYBOOST/false/g
 fi
 
+if [ ${FLAGS_logCollisions} -eq ${FLAGS_TRUE} ]; then
+  LOGCOLLISIONSREP=s/--LOG_COLLISIONS/true/g
+else
+  LOGCOLLISIONSREP=s/--LOG_COLLISIONS/false/g
+fi
+
 # Fill out and place the configuration file
 sed -e $USERANDSELREP \
     -e $USEMARKETREP  \
@@ -106,6 +114,7 @@ sed -e $USERANDSELREP \
     -e $ENERGYBOOSTREP \
     -e $TOURNAMENTSIZEREP \
     -e $FIXEDENERGYREP \
+    -e $LOGCOLLISIONSREP \
     -e $EGGTIMEREP ${TEMPLATEDIR}/${CONFNAME}.properties > ${CONFFILE}
 
 if [ $? -ne 0 ]

@@ -80,6 +80,9 @@ public:
 	static const int POSITIVE = 1;
 	static const int NEUTRAL = 0;
 	static const int NEGATIVE = -1;
+
+        /// Opportunity for (famous) last words
+        virtual void prepareShutdown() {};
 };
 
 

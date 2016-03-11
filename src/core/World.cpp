@@ -143,6 +143,13 @@ void World::resetWorld() {
 	}
 }
 
+void World::prepareShutdown() {
+    // allow all agents a final gasp
+    for (int i = 0; i != gAgentCounter; i++) {
+        agents[i]->prepareShutdown();
+    }
+}
+
 void World::updateWorld(Uint8 *__keyboardStates) {
 	// * update observer (e.g. update fitness, possibly update worldmodel, etc.)
 	// note 1: if you are not doing evolution or do not need monitoring/logging, this part may be commented to omit one loop. If updateFitness method is empty, the compiler optimization may do it by itself, though.

@@ -43,16 +43,21 @@ class SimpleShellsControlArchitecture : public BehaviorControlArchitecture {
 
         std::vector<Genome>::const_iterator selectWeighted(std::vector<Genome> & genomes);
 
+	void logStats();
+
 	public:
 		SimpleShellsControlArchitecture(RobotAgentWorldModel *__wm);
 		~SimpleShellsControlArchitecture();
 
 		void step();
 
-        void reset();
+        	void reset();
+		/// Opportunity for (famous) last words
+                void prepareShutdown();
+    
 		void updateActuators();
 		void updateGenomes();
-        void select();
+        	void select();
 
 		Genome* getGenome() {return &_activeGenome;}
 };

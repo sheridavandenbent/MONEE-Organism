@@ -150,6 +150,10 @@ public:
 	double yReal_old;
 	double _lastAgentAbsoluteOrientation;
 
+        /// Opportunity for (famous) last words
+        virtual void prepareShutdown();
+    
+
 	/*
 	// controller step
 	void step();

@@ -20,3 +20,4 @@ fi
 
 #display job queue
 showq -u $USER
+

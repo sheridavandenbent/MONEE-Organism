@@ -79,10 +79,12 @@ ExtendedProperties gProperties;
 bool gVideoRecording = false;
 
 
-//filenames
-
+//
+// Logging
+//
 std::string gCollisionLogFilename = "logs/collisions.txt";
 std::ofstream gCollisionLogFile;
+bool gLogCollisions(false);
 
 std::string gLogFilename = "logs/datalog.txt";
 std::ofstream gLogFile;
@@ -703,14 +705,24 @@ void updateDisplay() {
 }
 
 void initLogging() {
-	// main log file.
-
+	// 
+	// Open main log file.
+	//
 	gLogFile.open(gLogFilename.c_str()); //, std::ofstream::out | std::ofstream::app);
-	gCollisionLogFile.open(gCollisionLogFilename.c_str());
-
-	if (!gLogFile || !gCollisionLogFile) {
+	if (!gLogFile) {
 		std::cout << "[error] Cannot open log file " << gLogFilename << "." << std::endl << std::endl;
 		exit(1);
+	}
+
+	//
+	// Open collision logging if requested
+	//
+	if (gLogCollisions) {
+	    gCollisionLogFile.open(gCollisionLogFilename.c_str());
+	    if (!gLogFile || !gCollisionLogFile) {
+		std::cout << "[error] Cannot open log file " << gLogFilename << "." << std::endl << std::endl;
+		exit(1);
+            }
 	}
 
 	gLogFile << "# =-=-=-=-=-=-=-=-=-=-=" << std::endl;
@@ -1168,6 +1180,10 @@ bool loadProperties(std::string __propertiesFilename) {
 		//returnValue = false;
 	}
 	
+	if (!gProperties.checkAndGetPropertyValue("gLogCollisions", &gLogCollisions, false)) {
+		gLogCollisions = false;
+	}
+
 	if (gProperties.hasProperty("gCollisionLogFilename"))
 		gCollisionLogFilename = gProperties.getProperty("gCollisionLogFilename");
 	else {

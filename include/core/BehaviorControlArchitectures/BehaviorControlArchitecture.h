@@ -29,7 +29,9 @@ class BehaviorControlArchitecture
 				
 		virtual void reset() = 0;
 		virtual void step() = 0;
-		
+
+                /// Opportunity for (famous) last words
+                virtual void prepareShutdown() {}
 };
 
 
