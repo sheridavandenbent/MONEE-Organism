@@ -791,7 +791,7 @@ bool loadProperties(std::string __propertiesFilename) {
 
 	std::ifstream in(__propertiesFilename.c_str());
 
-	if (in == NULL)
+	if (!in)
 		return false;
 	gProperties.load(in);
 	in.close();
