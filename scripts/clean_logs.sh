@@ -1,11 +1,15 @@
 #!/bin/bash
-printf "Running `basename $0`"
+SCRIPT=`realpath -s $0`
+SCRIPTPATH=`dirname $SCRIPT`
+BASEDIR=$SCRIPTPATH/..
+printf "Running `basename $SCRIPT`"
 
-basedir=`pwd`/`dirname $0`/..
-printf " in basefolder: $basedir\n\n"
+#basedir=`pwd`/`dirname $0`/..
 
-printf "Cleaning $basedir/logs\n"
-rm $basedir/logs/* 2> /dev/null
+printf " in basefolder: $BASEDIR\n\n"
 
-printf "Cleaning $basedir/logs2\n\n"
-rm $basedir/logs2/* 2> /dev/null
+printf "Cleaning $BASEDIR/logs\n"
+rm $BASEDIR/logs/* 2> /dev/null
+
+printf "Cleaning $BASEDIR/logs2\n\n"
+rm $BASEDIR/logs2/* 2> /dev/null

@@ -1,7 +1,11 @@
 #!/bin/bash
 
+SCRIPT=`realpath -s $0`
+
+SCRIPTPATH=`dirname $SCRIPT`
+
 FULLCOMMAND="$0 $@"
-. lib/shflags 
+. $SCRIPTPATH/lib/shflags 
 
 #define the flags
 DEFINE_integer 'seed' '0' 'Seed' 's'
