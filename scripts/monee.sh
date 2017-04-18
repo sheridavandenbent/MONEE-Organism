@@ -1,7 +1,7 @@
 #!/bin/bash
 
 FULLCOMMAND="$0 $@"
-. ${HOME}/lib/shflags
+. lib/shflags 
 
 #define the flags
 DEFINE_integer 'seed' '0' 'Seed' 's'
@@ -33,14 +33,14 @@ TEMPLATEDIR=${FLAGS_templatedir}
 CONFNAME=${FLAGS_template}
 TASK1PREMIUM=${FLAGS_task1premium}
 
-#echo "running " `basename $0` " --seed ${FLAGS_seed} --basedir ${BASEDIR} --templatedir ${TEMPLATEDIR} --iterations ${FLAGS_iterations} --logdir ${FLAGS_logdir} --template ${CONFNAME} --task1premium ${FLAGS_task1premium}"
+echo "running " `basename $0` " --seed ${FLAGS_seed} --basedir ${BASEDIR} --templatedir ${TEMPLATEDIR} --iterations ${FLAGS_iterations} --logdir ${FLAGS_logdir} --template ${CONFNAME} --task1premium ${FLAGS_task1premium}"
 
 RUNID=`date "+%Y%m%d.%Hh%Mm%Ss"`.${RANDOM}
 
 ### copy the template configuration to the config dir, making the neccesary adjustments
 
 # Determine where the configuration file will be placed
-CONFDIR=${BASEDIR}/config/
+CONFDIR=${BASEDIR}/config
 CONFFILE=${CONFDIR}/${RUNID}.properties
 LOGFILE=${BASEDIR}/logs/${RUNID}.cout
 ERRORLOGFILE=${BASEDIR}/logs/${RUNID}.cerr
@@ -122,9 +122,13 @@ then
     exit $?
 fi
 
+ 
 ### Run RoboRobo!
 cp ${CONFFILE} "${BASEDIR}"/logs
 BINFILE="${BASEDIR}"/roborobo
+
+printf "running: \n\tconffile: $CONFFILE \n\tbinfile: $BINFILE  \n\tlogfile: $LOGFILE \n\terrorlogfile: $ERRORLOGFILE\n"
+
 $BINFILE -l $CONFFILE > $LOGFILE 2> $ERRORLOGFILE 
 
 for log in "${BASEDIR}"/logs/*${RUNID}.log; do
