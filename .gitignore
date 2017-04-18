@@ -4,6 +4,7 @@
 *.so
 *.out
 logs/
+logs2/
 tmp/
 # Compiled Object files
 *.slo
