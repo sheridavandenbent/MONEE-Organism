@@ -27,6 +27,13 @@ class SimpleShellsAgentWorldModel : public RobotAgentWorldModel {
         double _energyBoost;     /// < Percentage to add to lifetime when picking up an energy puck. Default 5, set through config file
         int _maxNrBoosts;		/// < Maximum number of lifetime boosts. Default 10, set through config file.
         int _nrBoosts;		    /// < Number of lifetime boosts experienced.
+        bool _useSpecialiser; // Makes bots steal health from worse bots
+        bool _spawnProtection; // Bots are protected from life stealing right after spawning
+        bool _stealFixed; // Steal a fixed amout or a relative amount
+        int _spawnProtectDuration; // Duration of the spawn protection
+        int _stealAmount; // Amount to be stolen
+        int _specialiserLifeCap; // Maximum amount of life that can be accumulated through stealing
+
         
         Uint32 _winnerId;
 

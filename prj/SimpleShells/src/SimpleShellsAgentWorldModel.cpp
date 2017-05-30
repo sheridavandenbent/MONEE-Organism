@@ -16,6 +16,13 @@ SimpleShellsAgentWorldModel::SimpleShellsAgentWorldModel() {
 	_fixedBoost = false;
 	_maxNrBoosts = 10;
 	_excludeEnergyPucks = true;
+	_useSpecialiser = false;
+	_spawnProtection = false;
+	_stealFixed = true;
+	_spawnProtectDuration = 100;
+	_stealAmount = 10;
+	_specialiserLifeCap = 0;
+
 
 	// For backward compatibility, we might check gSpecialisation as bool and as double; bool false-> 0.0, true->1.0
 	///bool temp(false);
@@ -29,6 +36,13 @@ SimpleShellsAgentWorldModel::SimpleShellsAgentWorldModel() {
 	gProperties.checkAndGetPropertyValue("maxNrBoost", &_maxNrBoosts, false);
 	gProperties.checkAndGetPropertyValue("energyPuckId", &_energyPuckId, false);
 	gProperties.checkAndGetPropertyValue("excludeEnergyPucks", &_excludeEnergyPucks, false);
+	
+	gProperties.checkAndGetPropertyValue("gUseSpecialiser", &_useSpecialiser, false);
+	gProperties.checkAndGetPropertyValue("gSpawnProtection", &_spawnProtection, false);
+	gProperties.checkAndGetPropertyValue("gStealFixed", &_stealFixed, false);
+	gProperties.checkAndGetPropertyValue("gSpawnProtectDuration", &_spawnProtectDuration, false);
+	gProperties.checkAndGetPropertyValue("gStealAmount", &_stealAmount, false);
+	gProperties.checkAndGetPropertyValue("gSpecialiserLifeCap", &_specialiserLifeCap, false);
 }
 
 SimpleShellsAgentWorldModel::~SimpleShellsAgentWorldModel() {

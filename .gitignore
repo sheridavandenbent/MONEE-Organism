@@ -34,3 +34,6 @@ tmp/
 *.exe
 *.out
 *.app
+
+# Eclipse stuff
+*.cproject

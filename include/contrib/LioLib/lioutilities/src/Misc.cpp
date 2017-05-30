@@ -33,13 +33,14 @@ string getStringOfBinaryValue( int __value, int __size )
 {
 	string returnString = "";
 
-	for( int i = __size ; i >= 0 ; i-- )
+	for( int i = __size ; i >= 0 ; i-- ){
 		if( ( __value & (1 << i) ) )
 			returnString += "1";
 		else
 			returnString += "0";
+	}
 
-		return returnString + "b";
+	return returnString + "b";
 }
 #endif
 

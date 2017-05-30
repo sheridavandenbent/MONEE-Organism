@@ -9,7 +9,7 @@ printf "Running `basename $SCRIPT`"
 printf " in basefolder: $BASEDIR\n\n"
 
 printf "Cleaning $BASEDIR/logs\n"
-rm $BASEDIR/logs/* 2> /dev/null
+rm -r $BASEDIR/logs/* 2> /dev/null
 
-printf "Cleaning $BASEDIR/logs2\n\n"
+printf "Cleaning $BASEDIR/logs2\n"
 rm $BASEDIR/logs2/* 2> /dev/null

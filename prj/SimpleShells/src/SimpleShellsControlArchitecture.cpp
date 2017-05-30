@@ -177,7 +177,7 @@ void SimpleShellsControlArchitecture::logStats()
         // Dump lifetime stats: time, ID, amount of pucks gathered, distance covered, lifetime
         //
         std::cout << "[gathered] " << _wm->_world->getIterations() << ' ' << _activeGenome.id;
-        for (int i = 0; i < _activeGenome.pucks.size(); ++i) {
+        for (int i = 0; i < (int)_activeGenome.pucks.size(); ++i) {
                 if (i == _wm->_energyPuckId && _wm->_excludeEnergyPucks)
                         std::cout << ' ' << _wm->_nrBoosts;
                 else
