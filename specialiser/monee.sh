@@ -9,7 +9,7 @@ FULLCOMMAND="$0 $@"
 
 #define the flags
 DEFINE_integer 'seed' '0' 'Seed' 's'
-DEFINE_string 'iterations' '1000' 'Number of iterations' 'i'
+DEFINE_string 'iterations' '10000' 'Number of iterations' 'i'
 DEFINE_string 'basedir' './' 'Base dir of experiment' 'b'
 DEFINE_string 'templatedir' 'template' 'Directory with template properties file'
 DEFINE_string 'logdir' 'logs' 'Directory to store the output'
@@ -32,8 +32,9 @@ DEFINE_boolean 'useSpecialiser' false 'If true, apply specialiser (make good bot
 DEFINE_boolean 'spawnProtection' true 'If true, bots cannot get life stolen from right after spawning'
 DEFINE_boolean 'stealFixed' true 'If true, steal a fixed amount, otherwise it is percentage'
 DEFINE_float 'spawnProtectDuration' '120' 'How long the spawn protection lasts'
-DEFINE_float 'stealAmount' '20' 'Amount stolen when life is stolen. Depending on stealFixed it is percentage or fixed amount of life.'
-DEFINE_float 'specialiserLifeCap' '0' 'Life cap for stealing life, must be higher than maxLifeTime, or 0 for unlimited.'
+DEFINE_float 'stealAmount' '40' 'Amount stolen when life is stolen. Depending on stealFixed it is percentage or fixed amount of life.'
+DEFINE_float 'specialiserLifeCap' '3000' 'Life cap for stealing life, must be higher than maxLifeTime, or 0 for unlimited.'
+DEFINE_float 'stealMargin' '20' 'How much % a robot has to be "better" to be allowed to steal from another robot.'
 
 # Parse the flags
 FLAGS "$@" || exit 1
@@ -66,6 +67,11 @@ ORGANISMSIZESLOGFILE=logs\\/${RUNID}.organism-sizes.log
 ORGANISMSLOGFILE=logs\\/${RUNID}.organisms.log
 LOCATIONLOGFILE=logs\\/${RUNID}.locations.log
 
+# Generate a random seed if the value 0 was passed.
+if [ ${FLAGS_seed} -eq '0' ]; then
+  FLAGS_seed=${RANDOM}
+fi
+
 # Prepare the replacement commands that will fill out the configuration template
 SEEDREP=s/--RANDOMSEED/${FLAGS_seed:0:9}/g # extract only the first 9 decimals, because Roborobo can't handle int overflows
 ITERATIONREP=s/--ITERATIONS/${FLAGS_iterations}/g
@@ -82,6 +88,7 @@ TOURNAMENTSIZEREP=s/--TOURNAMENT_SIZE/${FLAGS_tournamentSize}/g
 LOGCOLLISIONSREP=s/--LOG_COLLISIONS/${FLAGS_logCollisions}/g
 SPAWNPROTECTDURATION=s/--SPAWNPROTECTDURATION/${FLAGS_spawnProtectDuration}/g
 STEALAMOUNT=s/--STEALAMOUNT/${FLAGS_stealAmount}/g
+STEALMARGIN=s/--STEALMARGIN/${FLAGS_stealMargin}/g
 SPECIALISERLIFECAP=s/--SPECIALISERLIFECAP/${FLAGS_specialiserLifeCap}/g
 
 if [ ${FLAGS_market} -eq ${FLAGS_TRUE} ]; then
@@ -155,6 +162,7 @@ sed -e $USERANDSELREP \
     -e $SPAWNPROTECTDURATION \
     -e $STEALFIXED \
     -e $STEALAMOUNT \
+    -e $STEALMARGIN \
     -e $SPECIALISERLIFECAP \
     -e $EGGTIMEREP ${TEMPLATEDIR}${CONFNAME}.properties > ${CONFFILE}
 
@@ -168,9 +176,7 @@ fi
 cp ${CONFFILE} "${BASEDIR}"/logs
 BINFILE="${BASEDIR}"/roborobo
 
-
 $BINFILE -l $CONFFILE > $LOGFILE 2> $ERRORLOGFILE 
-
 
 for log in "${BASEDIR}"/logs/*${RUNID}*.log; do
    bzip2 $log
@@ -178,23 +184,14 @@ done
 
 bzip2 "${LOGFILE}"
 
-if [ -n "${FLAGS_logdir}" ] && [ ${FLAGS_logdir} != "logs" ];
-then
-    mkdir -p ${FLAGS_logdir}
-    cp "${BASEDIR}"/logs/${RUNID}* ${FLAGS_logdir}
-fi
+rm ${CONFFILE}
 
-# rm ${CONFFILE}
-
-find ${BASEDIR}/logs -name "properties_`echo $RUNID| tr '.' '-' | cut -d "-" -f 1-2`*ms.txt" -exec mv '{}' ${BASEDIR}/logs/${RUNID}.properties.dump \;
-
-printf "Simulation complete.\n"
-
-mkdir -p ${BASEDIR}/logs/standard
-mkdir -p ${BASEDIR}/logs/specialised
+find ${BASEDIR}/logs -name "properties_`echo $RUNID| tr '.' '-' | cut -d "-" -f 1-2`*ms_${FLAGS_seed}.txt" -exec mv '{}' ${BASEDIR}/logs/${RUNID}.properties.dump \;
 
 if [ ${FLAGS_useSpecialiser} -eq ${FLAGS_TRUE} ]; then
-  mv ${BASEDIR}/logs/${RUNID}* ${BASEDIR}/logs/specialised
+  mkdir -p ${BASEDIR}/logs/specialised_sm${FLAGS_stealMargin}_sa${FLAGS_stealAmount}_lc${FLAGS_specialiserLifeCap}
+  mv ${BASEDIR}/logs/${RUNID}* ${BASEDIR}/logs/specialised_sm${FLAGS_stealMargin}_sa${FLAGS_stealAmount}_lc${FLAGS_specialiserLifeCap}
 else
+  mkdir -p ${BASEDIR}/logs/standard
   mv ${BASEDIR}/logs/${RUNID}* ${BASEDIR}/logs/standard
 fi
