@@ -1,6 +1,6 @@
 CC           = g++
 CCFLAGS      = -Wall -O3 -DNDEBUG
-LDFLAGS      = -L/home/rick/lib -lSDL_image -lSDL_ttf `sdl-config --cflags --libs`
+LDFLAGS      = -L scripts/lib -lSDL_image -lSDL_ttf `sdl-config --cflags --libs`
 RM           = rm -f
 MAKE         = make
 
