@@ -19,6 +19,7 @@ class SimpleShellsAgentWorldModel : public RobotAgentWorldModel {
         int _lifetime[2];
         int _phase;
         int _action;
+        int _timeLived;
         double _speedPenalty;   /// < Speed multiplication factor between 0 and 1 (1: no penalty)
         double _specialisation; /// < Speed penalty exponent, set through config file
         int _energyPuckId;      /// < Id of puck type that gives energy, this can be disregarded as a task (defaults to -1, set through config file)
@@ -33,6 +34,7 @@ class SimpleShellsAgentWorldModel : public RobotAgentWorldModel {
         int _spawnProtectDuration; // Duration of the spawn protection
         int _stealAmount; // Amount to be stolen
         int _specialiserLifeCap; // Maximum amount of life that can be accumulated through stealing
+        int _stealMargin; // The percentage that a robot has to be better by
 
         
         Uint32 _winnerId;
@@ -61,6 +63,12 @@ class SimpleShellsAgentWorldModel : public RobotAgentWorldModel {
 
         /// Reacts to a collision with a puck of type g. Updates counts, adds energy, etc.
         void collectPuck(int g);
+
+        // handles life transfer between bots
+        void stealLife(RobotAgentWorldModel* other);
+
+        // calculate score for a bot. Yes, should really be private..
+        double calcScoreFrom_wm(RobotAgentWorldModel* some_wm);
 
         /// Clears WM information to start a new life.
         void reset(int maxLifetime[]);

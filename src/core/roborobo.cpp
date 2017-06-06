@@ -983,8 +983,6 @@ bool loadProperties(std::string __propertiesFilename) {
 	}
 
 
-
-
 	s = gProperties.getProperty("gBatchMode");
 	if (s == "true" || s == "True" || s == "TRUE")
 		gBatchMode = true;
@@ -1398,12 +1396,16 @@ bool loadProperties(std::string __propertiesFilename) {
 	}
 
 
+
+
 	// * Dump a raw copy of the properties file from gProperties, ie. as it was parsed and understood.
 
 	// prepare filename
 	std::string outputFileNameTmp = "logs/";
 	outputFileNameTmp += "properties_";
 	outputFileNameTmp += gStartTime;
+	outputFileNameTmp += "_";
+	outputFileNameTmp += gProperties.getProperty("gRandomSeed");
 	outputFileNameTmp += ".txt";
 
 	// open file

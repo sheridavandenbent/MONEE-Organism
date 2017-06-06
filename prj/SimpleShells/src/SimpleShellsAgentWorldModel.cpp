@@ -8,6 +8,7 @@
 SimpleShellsAgentWorldModel::SimpleShellsAgentWorldModel() {
 	setRobotLED_status(true);
 	_action = ACTION_ACTIVATE;
+	_timeLived = 1;
 	_speedPenalty = 1.0;
 	_specialisation = 0.0;
 	_nrBoosts = 0;
@@ -22,6 +23,7 @@ SimpleShellsAgentWorldModel::SimpleShellsAgentWorldModel() {
 	_spawnProtectDuration = 100;
 	_stealAmount = 10;
 	_specialiserLifeCap = 0;
+	_stealMargin = 10;
 
 
 	// For backward compatibility, we might check gSpecialisation as bool and as double; bool false-> 0.0, true->1.0
@@ -42,6 +44,7 @@ SimpleShellsAgentWorldModel::SimpleShellsAgentWorldModel() {
 	gProperties.checkAndGetPropertyValue("gStealFixed", &_stealFixed, false);
 	gProperties.checkAndGetPropertyValue("gSpawnProtectDuration", &_spawnProtectDuration, false);
 	gProperties.checkAndGetPropertyValue("gStealAmount", &_stealAmount, false);
+	gProperties.checkAndGetPropertyValue("gStealMargin", &_stealMargin, false);
 	gProperties.checkAndGetPropertyValue("gSpecialiserLifeCap", &_specialiserLifeCap, false);
 }
 
@@ -81,6 +84,9 @@ void SimpleShellsAgentWorldModel::setSpeedPenalty() {
 }
 
 void SimpleShellsAgentWorldModel::collectPuck(int g) {
+	if ((double) std::accumulate(_puckCounters->begin(), _puckCounters->end(), 0) == 0) {
+		// std::cout << "FIRST PUCK AT AGE: " << this->_timeLived << std::endl;
+	}
 	if (g == _energyPuckId) {
 		if (_nrBoosts < _maxNrBoosts) {
 			// add lifetime
@@ -103,6 +109,52 @@ void SimpleShellsAgentWorldModel::collectPuck(int g) {
 	}
 }
 
+void SimpleShellsAgentWorldModel::stealLife(RobotAgentWorldModel* other_wm) {
+
+	if (_useSpecialiser) {
+		// std::cout << "ATTEMPT LIFE STEAL" << std::endl;
+		
+		// std::cout << "Me: " << this->_agentId << " with age: " << this->_timeLived << " and pucks collected: " << (double) std::accumulate(_puckCounters->begin(), _puckCounters->end(), 0) << " VS " \
+		<< other_wm->_agentId << " with age: " << otherWm->_timeLived << " and pucks collected: " << (double) std::accumulate(otherWm->_puckCounters->begin(), otherWm->_puckCounters->end(), 0) << std::endl;
+		
+		SimpleShellsAgentWorldModel* otherWm = static_cast<SimpleShellsAgentWorldModel*>(other_wm);
+		if (_spawnProtection) {
+			if (otherWm->_timeLived <= _spawnProtectDuration) {
+				// std::cout << "SPAWNPROTECTED " << std::endl;
+				return;
+			}
+		}
+		// std::cout << "My Score: " << calcScoreFrom_wm(this) << " his score: " << calcScoreFrom_wm(other_wm) << std::endl;
+		// std::cout << "My life: " << _lifetime[PHASE_GATHERING] << std::endl;
+
+		if (calcScoreFrom_wm(this) * (1 + _stealMargin/100) > calcScoreFrom_wm(other_wm)) { // if I am better
+			// std::cout << "I AM BETTER" << std::endl;
+			_lifetime[PHASE_GATHERING] += std::min(otherWm->_lifetime[PHASE_GATHERING] - 1, _stealAmount);
+			
+			if (_specialiserLifeCap > 0 ){
+				_lifetime[PHASE_GATHERING] = std::max(_lifetime[PHASE_GATHERING], _specialiserLifeCap);
+			}
+
+		} else if (calcScoreFrom_wm(this) < calcScoreFrom_wm(other_wm) * (1 + _stealMargin/100) ){ // else if the other is better
+			// std::cout << "HE IS BETTER" << std::endl;
+			_lifetime[PHASE_GATHERING] -= std::min(_lifetime[PHASE_GATHERING] - 1, _stealAmount);			
+		} else {
+			// std::cout << "NOBODY WAS BETTER" << std::endl;
+		}
+		// std::cout << "My life: " << _lifetime[PHASE_GATHERING] << std::endl;
+
+	}
+	
+}
+
+double SimpleShellsAgentWorldModel::calcScoreFrom_wm(RobotAgentWorldModel* some_wm) {
+	SimpleShellsAgentWorldModel* wm = static_cast<SimpleShellsAgentWorldModel*>(some_wm);
+	double pucks = (double) std::accumulate(wm->_puckCounters->begin(), wm->_puckCounters->end(), 0);
+	// std::cout << "EVALUATING SCORE (" << some_wm->_agentId << "): " << "pucks: " << pucks << " age: " << wm->_timeLived << " Total score: " << (pucks/wm->_timeLived) * 1000 << std::endl;
+
+	return (pucks/wm->_timeLived) * 1000;
+}
+
 void SimpleShellsAgentWorldModel::reset(int maxLifetime[]) {
 	// Somewhat random lifetime to prevent synchronised life cycles
 	_lifetime[PHASE_GATHERING] = _maxLifetime = maxLifetime[PHASE_GATHERING] * (ranf() * 0.25 + 0.75);
@@ -115,4 +167,7 @@ void SimpleShellsAgentWorldModel::reset(int maxLifetime[]) {
 
 	_nrBoosts = 0;
 	_speedPenalty = 1.0;
+
+	_timeLived = 1;
+
 }

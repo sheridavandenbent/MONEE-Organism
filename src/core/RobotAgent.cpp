@@ -268,7 +268,10 @@ void RobotAgent::stepBehavior() {
 	if (_wm->_isAlive) // note: reviving a robot is performed in stepGenetics()
 	{
 		// compute commands
-		_behavior->step();
+		SimpleShellsAgentWorldModel* robotWm = static_cast<SimpleShellsAgentWorldModel*>(_wm);
+		// std::cout << "====================" << robotWm->_timeLived << std::endl;
+		robotWm->_timeLived++;
+		_behavior->step();		
 	}
 
 	displayInfo();
@@ -589,8 +592,22 @@ bool RobotAgent::isAgentCollision() {
 		double xo = this->_wm->_xReal - other->_wm->_xReal;
 		double yo = this->_wm->_yReal - other->_wm->_yReal;
 
-		if (xo * xo + yo * yo <= gApproximateDiameterSquared)
+		if (xo * xo + yo * yo <= gApproximateDiameterSquared * gApproximateDiameterSquared) {
+			SimpleShellsAgentWorldModel* tmpThisWm = static_cast<SimpleShellsAgentWorldModel*>(_wm);
+			SimpleShellsAgentWorldModel* tmpOtherWm = static_cast<SimpleShellsAgentWorldModel*>(other->_wm);
+
+			// std::cout << "COLLISION!!!!! " << thisId << " (age: " << tmpThisWm->_timeLived << ") with " << otherId << " (age: " << tmpOtherWm->_timeLived << ") distance was: " << xo * xo + yo * yo  << std::endl;
+
+			// handles stealing of life. The method will check whether this is activated. I know, ugly, but aint nobody got time to make this nicer.
+			if (tmpThisWm->_lifetime[PHASE_GATHERING] > 0 && tmpOtherWm->_lifetime[PHASE_GATHERING] > 0) {
+				SimpleShellsAgentWorldModel* wm = static_cast<SimpleShellsAgentWorldModel*>(_wm);
+				if (wm) {
+					wm->stealLife(other->_wm);
+				}
+			}
+
 			return true;
+		}
 	}
 	return false;
 }
