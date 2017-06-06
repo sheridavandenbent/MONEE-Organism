@@ -21,6 +21,7 @@ simulations[7]="${base_params} ${exp_params} --stealMargin 20 --stealAmount 40 -
 simulations[8]="${base_params} ${exp_params} --stealMargin 20 --stealAmount 80 --specialiserLifeCap 2000"
 simulations[9]="${base_params} ${exp_params} --stealMargin 20 --stealAmount 120 --specialiserLifeCap 2000"
 
+mkdir -p ${BASEDIR}/logs
 rm -f ${BASEDIR}/logs/finished.progress
 touch ${BASEDIR}/logs/running.progress
 parallel --progress --eta --bar --joblog ${BASEDIR}/logs/parallel_job_log_`date "+%Y%m%d.%Hh%Mm%Ss"` -j ${NUM_CORES} ::: "${simulations[@]}" ::: `seq 30`
