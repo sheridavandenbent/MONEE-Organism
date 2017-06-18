@@ -937,16 +937,15 @@ void RobotAgent::setUpConnections() {
 			x2 = other->_wm->_xReal;
 			y2 = other->_wm->_yReal;
 
+			std::cout << "x1 " << x1 << " y1 " << y1 << std::endl;
+			std::cout << "x2 " << x2 << " y2 " << y2 << std::endl;
+			std::cout << "gap " << gConnectionGap << std::endl;
+
 			// Are they within range?
 			if (SDL_CollideBoundingCircle(gAgentMaskImage, x1, y1, gAgentMaskImage, x2, y2, gConnectionGap)) {
 				// connect to other robot
+				this->connectToRobot(other);
 
-				// ---- Mark: but only connect in case you are willing to do so.
-
-				if ((this->getConnectToOthers() == Agent::POSITIVE) && (other->getConnectToOthers() == Agent::POSITIVE)) {
-					// || other->getConnectToOthers() == Agent::NEUTRAL)) {
-					this->connectToRobot(other);
-				}
 				//				else if (this->getConnectToOthers() == Agent::NEUTRAL && other->getConnectToOthers() == Agent::POSITIVE) {
 				//					this->connectToRobot(other);
 				//				}

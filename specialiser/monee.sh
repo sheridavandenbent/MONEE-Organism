@@ -9,11 +9,11 @@ FULLCOMMAND="$0 $@"
 
 #define the flags
 DEFINE_integer 'seed' '0' 'Seed' 's'
-DEFINE_string 'iterations' '10000' 'Number of iterations' 'i'
+DEFINE_string 'iterations' '10' 'Number of iterations' 'i'
 DEFINE_string 'basedir' './' 'Base dir of experiment' 'b'
-DEFINE_string 'templatedir' 'template' 'Directory with template properties file'
+DEFINE_string 'templatedir' 'template/' 'Directory with template properties file'
 DEFINE_string 'logdir' 'logs' 'Directory to store the output'
-DEFINE_string 'template' 'TwoColours.specialiser' 'Template file name'
+DEFINE_string 'template' 'OneColour.organisms' 'Template file name'
 DEFINE_float 'task1premium' '1.0' 'Premium (multiplication factor) for the 1st task'
 DEFINE_boolean 'market' true 'Enable currency exchange mechanism'
 DEFINE_float 'specialisation' 0.0 'Penalise generalists (by limiting their speed). Higher values: stricter penalty. 0.0: no penalty, 1.0: standard penalty.' 
@@ -29,8 +29,9 @@ DEFINE_boolean 'fixedBoost' false 'If true, energy boost is a percentage of orig
 DEFINE_boolean 'logCollisions' false 'If true, collision info is logged in (large) separate log file. No collision logging otherwise'
 DEFINE_boolean 'gBatchMode' false 'If true, show gui'
 DEFINE_boolean 'useSpecialiser' false 'If true, apply specialiser (make good bots steal life from bad bots)'
-DEFINE_boolean 'spawnProtection' true 'If true, bots cannot get life stolen from right after spawning'
-DEFINE_boolean 'stealFixed' true 'If true, steal a fixed amount, otherwise it is percentage'
+DEFINE_boolean 'spawnProtection' false 'If true, bots cannot get life stolen from right after spawning'
+DEFINE_boolean 'stealFixed' false 'If true, steal a fixed amount, otherwise it is percentage'
+DEFINE_boolean 'useOrganisms' true 'If true, use organisms'
 DEFINE_float 'spawnProtectDuration' '120' 'How long the spawn protection lasts'
 DEFINE_float 'stealAmount' '40' 'Amount stolen when life is stolen. Depending on stealFixed it is percentage or fixed amount of life.'
 DEFINE_float 'specialiserLifeCap' '3000' 'Life cap for stealing life, must be higher than maxLifeTime, or 0 for unlimited.'
@@ -76,6 +77,8 @@ fi
 SEEDREP=s/--RANDOMSEED/${FLAGS_seed:0:9}/g # extract only the first 9 decimals, because Roborobo can't handle int overflows
 ITERATIONREP=s/--ITERATIONS/${FLAGS_iterations}/g
 OUTPUTLOGREP=s/--OUTPUTLOG/${OUTPUTLOGFILE}/g
+ORGANISMSLOGREP=s/--ORGANISMSLOG/${ORGANISMSLOGFILE}/g
+ORGANISMSIZESLOGREP=s/--ORGANISMSIZESLOG/${ORGANISMSIZESLOGFILE}/g
 COLLISIONLOGREP=s/--COLLISIONLOG/${COLLISIONLOGFILE}/g
 TASKPREMIUMREP=s/--TASK1PREMIUM/${TASK1PREMIUM}/g
 COMMDISTREP=s/--COMMDISTANCE/${FLAGS_commDistance}/g
@@ -140,6 +143,13 @@ else
   STEALFIXED=s/--STEALFIXED/false/g
 fi
 
+# Organism vars:
+if [ ${FLAGS_useOrganisms} -eq ${FLAGS_TRUE} ]; then
+  USEORGANISMS=s/--USEORGANISMS/true/g
+else
+  USEORGANISMS=s/--USEORGANISMS/false/g
+fi
+
 # Fill out and place the configuration file
 sed -e $USERANDSELREP \
     -e $USEMARKETREP  \
@@ -164,6 +174,9 @@ sed -e $USERANDSELREP \
     -e $STEALAMOUNT \
     -e $STEALMARGIN \
     -e $SPECIALISERLIFECAP \
+    -e $USEORGANISMS \
+    -e $ORGANISMSLOGREP \
+    -e $ORGANISMSIZESLOGREP \
     -e $EGGTIMEREP ${TEMPLATEDIR}${CONFNAME}.properties > ${CONFFILE}
 
 if [ $? -ne 0 ]
@@ -171,7 +184,6 @@ then
     exit $?
 fi
 
- 
 ### Run RoboRobo!
 cp ${CONFFILE} "${BASEDIR}"/logs
 BINFILE="${BASEDIR}"/roborobo
@@ -184,7 +196,7 @@ done
 
 bzip2 "${LOGFILE}"
 
-rm ${CONFFILE}
+# rm ${CONFFILE}
 
 find ${BASEDIR}/logs -name "properties_`echo $RUNID| tr '.' '-' | cut -d "-" -f 1-2`*ms_${FLAGS_seed}.txt" -exec mv '{}' ${BASEDIR}/logs/${RUNID}.properties.dump \;
 

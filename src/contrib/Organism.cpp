@@ -30,6 +30,7 @@ std::vector<Organism*> *Organism::organisms = NULL;
 std::ofstream Organism::sizeLog;
 
 void Organism::remove(Organism *organism) {
+
 	std::vector<Organism*>::iterator it;
 	for (it = organisms->begin(); it != organisms->end(); it++) {
 		if (*it == organism) {
@@ -40,15 +41,16 @@ void Organism::remove(Organism *organism) {
 }
 
 void Organism::add(Organism *organism) {
+
 	organisms->push_back(organism);
 }
 
 void Organism::reset() {
+
 	if (organisms != NULL) {
 		Organism::destroy();
 	}
 	organisms = new std::vector<Organism*>();
-
 	sizeLog.open(gOrganismSizesLogFilename.c_str());
 	if (!sizeLog) {
 		std::cout << "[error] Cannot open log file " << gOrganismSizesLogFilename << "." << std::endl << std::endl;
@@ -58,6 +60,7 @@ void Organism::reset() {
 }
 
 void Organism::destroy() {
+
 	std::ofstream oLog;
 	oLog.open(gOrganismLogFilename.c_str());
 
@@ -97,15 +100,18 @@ void Organism::showAll() {
 	for (it = organisms->begin(); it != organisms->end(); it++) {
 		(*it)->show();
 	}
+
 }
 
 void Organism::logAll() {
 	if (sizeLog) {
 		std::vector<Organism*>::iterator it;
+
 		for (it = organisms->begin(); it != organisms->end(); it++) {
 			(*it)->logOrganism();
 		}
 	}
+
 }
 
 /**

@@ -24,5 +24,5 @@ simulations[9]="${base_params} ${exp_params} --stealMargin 20 --stealAmount 120 
 mkdir -p ${BASEDIR}/logs
 rm -f ${BASEDIR}/logs/finished.progress
 touch ${BASEDIR}/logs/running.progress
-parallel --progress --eta --bar --joblog ${BASEDIR}/logs/parallel_job_log_`date "+%Y%m%d.%Hh%Mm%Ss"` -j ${NUM_CORES} ::: "${simulations[@]}" ::: `seq 30`
+parallel --progress --eta --bar --joblog ${BASEDIR}/logs/parallel_job_log_`date "+%Y%m%d.%Hh%Mm%Ss"` -j ${NUM_CORES} ::: "${simulations[@]}" ::: `seq 2`
 mv ${BASEDIR}/logs/running.progress ${BASEDIR}/logs/finished.progress
