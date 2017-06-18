@@ -9,7 +9,7 @@ FULLCOMMAND="$0 $@"
 
 #define the flags
 DEFINE_integer 'seed' '0' 'Seed' 's'
-DEFINE_string 'iterations' '10' 'Number of iterations' 'i'
+DEFINE_string 'iterations' '1000000' 'Number of iterations' 'i'
 DEFINE_string 'basedir' './' 'Base dir of experiment' 'b'
 DEFINE_string 'templatedir' 'template/' 'Directory with template properties file'
 DEFINE_string 'logdir' 'logs' 'Directory to store the output'
@@ -196,7 +196,7 @@ done
 
 bzip2 "${LOGFILE}"
 
-# rm ${CONFFILE}
+rm ${CONFFILE}
 
 find ${BASEDIR}/logs -name "properties_`echo $RUNID| tr '.' '-' | cut -d "-" -f 1-2`*ms_${FLAGS_seed}.txt" -exec mv '{}' ${BASEDIR}/logs/${RUNID}.properties.dump \;
 
