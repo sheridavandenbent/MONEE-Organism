@@ -112,23 +112,14 @@ void SimpleShellsAgentWorldModel::collectPuck(int g) {
 void SimpleShellsAgentWorldModel::stealLife(RobotAgentWorldModel* other_wm) {
 
 	if (_useSpecialiser) {
-		// std::cout << "ATTEMPT LIFE STEAL" << std::endl;
-		
-		// std::cout << "Me: " << this->_agentId << " with age: " << this->_timeLived << " and pucks collected: " << (double) std::accumulate(_puckCounters->begin(), _puckCounters->end(), 0) << " VS " \
-		<< other_wm->_agentId << " with age: " << otherWm->_timeLived << " and pucks collected: " << (double) std::accumulate(otherWm->_puckCounters->begin(), otherWm->_puckCounters->end(), 0) << std::endl;
-		
 		SimpleShellsAgentWorldModel* otherWm = static_cast<SimpleShellsAgentWorldModel*>(other_wm);
 		if (_spawnProtection) {
 			if (otherWm->_timeLived <= _spawnProtectDuration) {
-				// std::cout << "SPAWNPROTECTED " << std::endl;
 				return;
 			}
 		}
-		// std::cout << "My Score: " << calcScoreFrom_wm(this) << " his score: " << calcScoreFrom_wm(other_wm) << std::endl;
-		// std::cout << "My life: " << _lifetime[PHASE_GATHERING] << std::endl;
 
 		if (calcScoreFrom_wm(this) * (1 + _stealMargin/100) > calcScoreFrom_wm(other_wm)) { // if I am better
-			// std::cout << "I AM BETTER" << std::endl;
 			_lifetime[PHASE_GATHERING] += std::min(otherWm->_lifetime[PHASE_GATHERING] - 1, _stealAmount);
 			
 			if (_specialiserLifeCap > 0 ){
@@ -136,12 +127,8 @@ void SimpleShellsAgentWorldModel::stealLife(RobotAgentWorldModel* other_wm) {
 			}
 
 		} else if (calcScoreFrom_wm(this) < calcScoreFrom_wm(other_wm) * (1 + _stealMargin/100) ){ // else if the other is better
-			// std::cout << "HE IS BETTER" << std::endl;
 			_lifetime[PHASE_GATHERING] -= std::min(_lifetime[PHASE_GATHERING] - 1, _stealAmount);			
-		} else {
-			// std::cout << "NOBODY WAS BETTER" << std::endl;
-		}
-		// std::cout << "My life: " << _lifetime[PHASE_GATHERING] << std::endl;
+		} 
 
 	}
 	
@@ -150,7 +137,6 @@ void SimpleShellsAgentWorldModel::stealLife(RobotAgentWorldModel* other_wm) {
 double SimpleShellsAgentWorldModel::calcScoreFrom_wm(RobotAgentWorldModel* some_wm) {
 	SimpleShellsAgentWorldModel* wm = static_cast<SimpleShellsAgentWorldModel*>(some_wm);
 	double pucks = (double) std::accumulate(wm->_puckCounters->begin(), wm->_puckCounters->end(), 0);
-	// std::cout << "EVALUATING SCORE (" << some_wm->_agentId << "): " << "pucks: " << pucks << " age: " << wm->_timeLived << " Total score: " << (pucks/wm->_timeLived) * 1000 << std::endl;
 
 	return (pucks/wm->_timeLived) * 1000;
 }
