@@ -9,7 +9,7 @@ FULLCOMMAND="$0 $@"
 
 #define the flags
 DEFINE_integer 'seed' '0' 'Seed' 's'
-DEFINE_string 'iterations' '1000000' 'Number of iterations' 'i'
+DEFINE_string 'iterations' '1000' 'Number of iterations' 'i'
 DEFINE_string 'basedir' './' 'Base dir of experiment' 'b'
 DEFINE_string 'templatedir' 'template/' 'Directory with template properties file'
 DEFINE_string 'logdir' 'logs' 'Directory to store the output'
@@ -94,6 +94,13 @@ STEALAMOUNT=s/--STEALAMOUNT/${FLAGS_stealAmount}/g
 STEALMARGIN=s/--STEALMARGIN/${FLAGS_stealMargin}/g
 SPECIALISERLIFECAP=s/--SPECIALISERLIFECAP/${FLAGS_specialiserLifeCap}/g
 
+
+if [ ${FLAGS_gBatchMode} -eq ${FLAGS_TRUE} ]; then
+  BATCHMODE=s/--BATCHMODE/true/g
+else
+  BATCHMODE=s/--BATCHMODE/false/g
+fi
+
 if [ ${FLAGS_market} -eq ${FLAGS_TRUE} ]; then
   USEMARKETREP=s/--USE_MARKET/true/g
 else
@@ -177,6 +184,7 @@ sed -e $USERANDSELREP \
     -e $USEORGANISMS \
     -e $ORGANISMSLOGREP \
     -e $ORGANISMSIZESLOGREP \
+    -e $BATCHMODE \
     -e $EGGTIMEREP ${TEMPLATEDIR}${CONFNAME}.properties > ${CONFFILE}
 
 if [ $? -ne 0 ]
@@ -190,11 +198,11 @@ BINFILE="${BASEDIR}"/roborobo
 
 $BINFILE -l $CONFFILE > $LOGFILE 2> $ERRORLOGFILE 
 
-for log in "${BASEDIR}"/logs/*${RUNID}*.log; do
-   bzip2 $log
-done
+# for log in "${BASEDIR}"/logs/*${RUNID}*.log; do
+#    bzip2 $log
+# done
 
-bzip2 "${LOGFILE}"
+# bzip2 "${LOGFILE}"
 
 rm ${CONFFILE}
 

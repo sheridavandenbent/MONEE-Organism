@@ -47,6 +47,8 @@ public:
 	void setInactive();
 	bool isActive();
 
+	void collectPuck(int g);
+
 	static void remove(Organism *organism);
 	static void add(Organism *organism);
 	static void reset();

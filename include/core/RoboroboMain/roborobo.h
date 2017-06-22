@@ -246,7 +246,14 @@ inline bool isRadioConnection(int & idOne, int & idTwo) {
 }
 
 inline bool isCollisionPotential(int & idOne, int & idTwo) {
+    std::cout << "isCollisionPotential h" << gAgentCounter << " HI" << std::endl;
 	int index = (idOne < idTwo) ? idOne * gAgentCounter + idTwo : idTwo * gAgentCounter + idOne;
+    std::cout << "01" << std::endl;
+    bool answer = gDistSquared[index] < gApproximateDiameterSquared * 9;
+    std::cout << "02" << std::endl;
+    std::cout << answer << std::endl;
+    std::cout << "0222" << std::endl;
+
     return gDistSquared[index] < gApproximateDiameterSquared * 9;
 }
 

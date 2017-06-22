@@ -581,3 +581,13 @@ int Organism::agentsInRiverzone() {
 	}
 	return nAgents;
 }
+
+void Organism::collectPuck(int g) {
+	std::cout << "OrCollectPuck" << std::endl;
+
+	std::vector<RobotAgentPtr>::iterator it;
+	for (it = this->agents.begin(); it != this->agents.end(); it++) {
+		SimpleShellsAgentWorldModel* wm = static_cast<SimpleShellsAgentWorldModel*>((*it)->getWorldModel());
+		wm->collectPuck(g);
+	}
+}

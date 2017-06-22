@@ -186,7 +186,8 @@ void RobotAgent::reset() {
 	setCoordReal(x, y);
 	setCoord(x, y);
 
-	while (randomStart && isCollision()) {
+	while (isCollision() && randomStart == true) {
+		std::cout << "In while loop" << std::endl;
 		//std::cout << "Collision detected on " << x << ", " << y << " rerolling" << std::endl;
 		x = (int) 20 + (ranf() * (double) (gSpawnWidth));
 		y = (int) 20 + (ranf() * (double) (gSpawnHeight));
@@ -543,23 +544,32 @@ void RobotAgent::move(int __recursiveIt) // the interface btw agent and world --
 
 
 bool RobotAgent::isObjectCollision() {
-
+	std::cout << "isObjectCollision" << std::endl;
 	for (int i = 0; i < gAgentWidth; i++) {
+		std::cout << "_1" << std::endl;
 		for (int j = 0; j < gAgentHeight; j++) {
+			std::cout << "_2" << std::endl;	
 			Uint32 pixel = getPixel32(gEnvironmentImage, _x+i, _y+j);
 			if (pixel != G_COLOR_WHITE) {
+				std::cout << "_3" << std::endl;	
 				Uint8 r, g, b;
 				SDL_GetRGB(pixel, gEnvironmentImage->format, &r, &g, &b);
 				if (r == 0xFF) {
+					std::cout << "_4"	 << std::endl;	
 					int id = gPuckMap[_x+i][_y+j];
 					gPucks[id].replace(true);
 
 					SimpleShellsAgentWorldModel* wm = static_cast<SimpleShellsAgentWorldModel*>(_wm);
 					if (wm) {
-						wm->collectPuck(g);
+						std::cout << "_5"	 << std::endl;	
+						if (gUseOrganisms && this->isPartOfOrganism()) {
+							this->_organism->collectPuck(g);
+						} else {
+							wm->collectPuck(g);
+						}
 					}
 
-					// TODO: this might bethe right way to do it, but better tweak the distribution, so it won't fall twice at same place.
+					// TODO: this might be the right way to do it, but better tweak the distribution, so it won't fall twice at same place.
 					return isObjectCollision();
 				} else {
 					return true;
@@ -572,27 +582,41 @@ bool RobotAgent::isObjectCollision() {
 }
 
 bool RobotAgent::isAgentCollision() {
+	std::cout << "isAgentCollision" << std::endl;
 	// Could use radio data here. Distance can be stored in the matrix. But then we'll need 3xD (?), cause two bots can move up to 2xD (?) towards each other in a single turn.
 	/* Exactly how it's done in SDL_Collide, but without surface juggling. Plus it helps, that both agents have same approximate diameter. */
 
 	int thisId = this->_wm->_agentId;
+	std::cout << "*1" << std::endl;
 	std::vector<RobotAgentPtr>* agents = gWorld->listAgents();
+	std::cout << "*2" << std::endl;
 	for (int otherId = 0; otherId < gAgentCounter; otherId++) {
+		std::cout << "*3" << std::endl;	
 		// If two bots are further away than 3 diameters, there won't be any way for them to collide in a single turn (even if they are moving towards each other at maximum (theoretically allowed) speed, they'll cover at most 1 diameter each, which leaves 1 diameter between them).
 
-		if (!isCollisionPotential(thisId, otherId))
+		if (!isCollisionPotential(thisId, otherId)) {
+			std::cout << "*4" << std::endl;		
 			continue;
+		}
+		std::cout << "You don't see me" << std::endl;
 		if (otherId == thisId)
+			std::cout << "*5" << std::endl;		
 			continue;
 		// If robot is close enough to us to make the collision possible, let's take a look at his coordinates and re-calculate distance to him.
+		std::cout << "*6" << std::endl;
 		RobotAgentPtr other = agents->at(otherId);
-		if (gUseOrganisms && !this->isPartOfSameOrganism(other))
+		std::cout << "*7" << std::endl;
+		if (gUseOrganisms && !this->isPartOfSameOrganism(other)) 
+			std::cout << "*8" << std::endl;
 			continue;
+		std::cout << "*9" << std::endl;
 
 		double xo = this->_wm->_xReal - other->_wm->_xReal;
 		double yo = this->_wm->_yReal - other->_wm->_yReal;
+		std::cout << "*10" << std::endl;
 
 		if (xo * xo + yo * yo <= gApproximateDiameterSquared * gApproximateDiameterSquared) {
+			std::cout << "*11" << std::endl;
 			SimpleShellsAgentWorldModel* tmpThisWm = static_cast<SimpleShellsAgentWorldModel*>(_wm);
 			SimpleShellsAgentWorldModel* tmpOtherWm = static_cast<SimpleShellsAgentWorldModel*>(other->_wm);
 
@@ -614,17 +638,21 @@ bool RobotAgent::isAgentCollision() {
 
 
 bool RobotAgent::isCollision() {
+	std::cout << "in collision function" << std::endl;
 	bool collision = false;
 	// * collision with border
 	if ((_x < 0) || (_x + gAgentWidth >= gAreaWidth) || (_y < 0) || (_y + gAgentHeight >= gAreaHeight))
 		collision = true;
+	std::cout << "1" << std::endl;
 	// * environment objects and other agents
-	if (isObjectCollision() || isAgentCollision())
+	if (isObjectCollision()) // || isAgentCollision())
 		collision = true;
+	std::cout << "2" << std::endl;
 	// Update log on collision
 	if (collision && gCollisionLogFile.is_open()) {
 		gCollisionLogFile << this->_wm->_world->getIterations() << " #" << this->_wm->_agentId << std::endl;
 	}
+	std::cout << "3" << std::endl;
 	return collision;
 }
 
