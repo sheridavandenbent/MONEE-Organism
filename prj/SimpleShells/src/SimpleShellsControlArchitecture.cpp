@@ -421,9 +421,7 @@ void SimpleShellsControlArchitecture::updateActuators() {
 	_wm->_desiredTranslationalValue = trans * gMaxTranslationalSpeed * _wm->_speedPenalty;
 	_wm->_desiredRotationalVelocity = rotor * gMaxRotationalSpeed * _wm->_speedPenalty;
 	_wm->_bonding = bonding;
-	std::cout << "this is where it goes wrong" << std::endl;
 	_wm->_world->getAgent(_wm->_agentId)->setConnectToOthers(bonding);
-	std::cout << "you don't see me" << std::endl;
 }
 
 void SimpleShellsControlArchitecture::select() {

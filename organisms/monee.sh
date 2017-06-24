@@ -27,12 +27,14 @@ DEFINE_integer 'tournamentSize' '2' 'Size of tournament for parent selection. Va
 DEFINE_boolean 'excludeEnergyPucks' true 'Exclude energy pucks from task and fitness calculations'
 DEFINE_boolean 'fixedBoost' false 'If true, energy boost is a percentage of original lifetime, otherwise (the default) a percentage of remaining lifetime'
 DEFINE_boolean 'logCollisions' false 'If true, collision info is logged in (large) separate log file. No collision logging otherwise'
-DEFINE_boolean 'gBatchMode' false 'If false, show gui'
+DEFINE_boolean 'gBatchMode' true 'If false, show gui'
 DEFINE_boolean 'useSpecialiser' false 'If true, apply specialiser (make good bots steal life from bad bots)'
 DEFINE_boolean 'spawnProtection' false 'If true, bots cannot get life stolen from right after spawning'
 DEFINE_boolean 'stealFixed' false 'If true, steal a fixed amount, otherwise it is percentage'
-DEFINE_boolean 'useOrganisms' true 'If true, use organisms'
+
+DEFINE_boolean 'useOrganisms' false 'If true, use organisms'
 DEFINE_integer 'organismBonusMode' '0' 'at 0, no bonus is given. at 1, the whole group gets a bonus. at 1, the individual gets a bonus.'
+
 DEFINE_float 'spawnProtectDuration' '120' 'How long the spawn protection lasts'
 DEFINE_float 'stealAmount' '40' 'Amount stolen when life is stolen. Depending on stealFixed it is percentage or fixed amount of life.'
 DEFINE_float 'specialiserLifeCap' '3000' 'Life cap for stealing life, must be higher than maxLifeTime, or 0 for unlimited.'
@@ -195,25 +197,25 @@ then
     exit $?
 fi
 
-### Run RoboRobo!
 cp ${CONFFILE} "${BASEDIR}"/logs
-BINFILE="${BASEDIR}"/roborobo
 
+### Run RoboRobo!
+BINFILE="${BASEDIR}"/roborobo
 $BINFILE -l $CONFFILE > $LOGFILE 2> $ERRORLOGFILE 
 
-# for log in "${BASEDIR}"/logs/*${RUNID}*.log; do
-#    bzip2 $log
-# done
+for log in "${BASEDIR}"/logs/*${RUNID}*.log; do
+   bzip2 $log
+done
 
-# bzip2 "${LOGFILE}"
+bzip2 "${LOGFILE}"
 
 rm ${CONFFILE}
 
 find ${BASEDIR}/logs -name "properties_`echo $RUNID| tr '.' '-' | cut -d "-" -f 1-2`*ms_${FLAGS_seed}.txt" -exec mv '{}' ${BASEDIR}/logs/${RUNID}.properties.dump \;
 
-if [ ${FLAGS_useSpecialiser} -eq ${FLAGS_TRUE} ]; then
-  mkdir -p ${BASEDIR}/logs/specialised_sm${FLAGS_stealMargin}_sa${FLAGS_stealAmount}_lc${FLAGS_specialiserLifeCap}
-  mv ${BASEDIR}/logs/${RUNID}* ${BASEDIR}/logs/specialised_sm${FLAGS_stealMargin}_sa${FLAGS_stealAmount}_lc${FLAGS_specialiserLifeCap}
+if [ ${FLAGS_useOrganisms} -eq ${FLAGS_TRUE} ]; then
+  mkdir -p ${BASEDIR}/logs/organisms_mode${FLAGS_organismBonusMode}
+  mv ${BASEDIR}/logs/${RUNID}* ${BASEDIR}/logs/organisms_mode${FLAGS_organismBonusMode}
 else
   mkdir -p ${BASEDIR}/logs/standard
   mv ${BASEDIR}/logs/${RUNID}* ${BASEDIR}/logs/standard
