@@ -831,13 +831,13 @@ void RobotAgent::registerAgent() {
 
 void RobotAgent::unregisterAgent() {
 	if (gAgentRegistration && this->_registered) {
-		if (gUseOrganisms && _connectToOthers == POSITIVE) {
-			clean_surface(_x, _y, gAgentPositiveMaskImage, gEnvironmentImage); // original
-		} else if (gUseOrganisms && _connectToOthers == NEGATIVE) {
-			clean_surface(_x, _y, gAgentNegativeMaskImage, gEnvironmentImage); // original
-		} else {
+		// if (gUseOrganisms && _connectToOthers == POSITIVE) {
+		// 	clean_surface(_x, _y, gAgentPositiveMaskImage, gEnvironmentImage); // original
+		// } else if (gUseOrganisms && _connectToOthers == NEGATIVE) {
+		// 	clean_surface(_x, _y, gAgentNegativeMaskImage, gEnvironmentImage); // original
+		// } else {
 			clean_surface(_x, _y, gAgentMaskImage, gEnvironmentImage); // original
-		}
+		// }
 		this->_registered = false;
 	}
 }

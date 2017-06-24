@@ -650,41 +650,46 @@ void updateDisplay() {
 	//if ( world->getIterations() % 10 == 0 )
 	if (gDisplayMode == 0 || (gDisplayMode == 1 && gWorld->getIterations() % gFastDisplayModeSpeed == 0)) {
 		//Set the camera to either focused agent or inspector virtual location
-		if (gInspectorMode)
+		if (gInspectorMode) {
 			inspectorAgent->set_camera();
-		else
+		} else {
 			gWorld->getAgent(gAgentIndexFocus)->set_camera();
+		}
 
 		//Show the background image (parallax) and foreground image (active borders) [note: this is what costs a lot wrt. computation time]
-		if (gBackgroundImage != NULL && gNiceRendering)
+		if (gBackgroundImage != NULL && gNiceRendering){
 			apply_surface(0, 0, gBackgroundImage, gScreen, &gCameraParallax);
-		else
-			if (gNiceRendering)
+		} else if (gNiceRendering) {
 			SDL_FillRect(gScreen, &gScreen->clip_rect, SDL_MapRGB(gScreen->format, 0xFF, 0xFF, 0xFF)); // clear screen if no background image
-		else
+		} else {
 			apply_surface(0, 0, gZoneImage, gScreen, &gCameraParallax);
+		}
 
-		// if (gNiceRendering)
-		// 	apply_surface(0, 0, gForegroundImage, gScreen, &gCamera);
-		// else
+		if (gNiceRendering) {
+			apply_surface(0, 0, gForegroundImage, gScreen, &gCamera);
+		} else {
 			apply_surface(0, 0, gEnvironmentImage, gScreen, &gCamera);
+		}
 
 
 		//Show the dot on the screen
 		for (int i = 0; i != gAgentCounter; i++) {
-			if (gWorld->getAgent(i)->isRegistered())
+			if (gWorld->getAgent(i)->isRegistered()) {
 				gWorld->getAgent(i)->unregisterAgent(); // remove agent from memory so as to correctly cast sensors (otw: may see itself)
+			}
 
 			gWorld->getAgent(i)->show(); // show sensor rays.
 
 			// re-registering agents (post-display)
-			if (!gWorld->getAgent(i)->isRegistered())
+			if (!gWorld->getAgent(i)->isRegistered()){
 				gWorld->getAgent(i)->registerAgent();
+			}
 		}
 
 		// show inspector agent location (single point)
-		if (gInspectorMode)
+		if (gInspectorMode){
 			inspectorAgent->show();
+		}
 
 
 		/**/
