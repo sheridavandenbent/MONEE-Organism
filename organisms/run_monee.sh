@@ -15,5 +15,5 @@ simulations[3]="${base_params} --useOrganisms true --organismBonusMode 2" # Indi
 mkdir -p ${BASEDIR}/logs
 rm -f ${BASEDIR}/logs/finished.progress
 touch ${BASEDIR}/logs/running.progress
-parallel --progress --eta --bar --joblog ${BASEDIR}/logs/parallel_job_log_`date "+%Y%m%d.%Hh%Mm%Ss"` -j ${NUM_CORES} ::: "${simulations[@]}" ::: `seq 1`
+parallel --progress --eta --bar --joblog ${BASEDIR}/logs/parallel_job_log_`date "+%Y%m%d.%Hh%Mm%Ss"` -j ${NUM_CORES} ::: "${simulations[@]}" ::: `seq 24`
 mv ${BASEDIR}/logs/running.progress ${BASEDIR}/logs/finished.progress
