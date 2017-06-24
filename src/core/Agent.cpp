@@ -69,13 +69,13 @@ void Agent::shift_boxes()  	// NOT IMPLEMENTED (should be revised if collision b
 void Agent::show() // display on screen
 {
 	//Show the dot
-	if (gUseOrganisms && _connectToOthers == POSITIVE) {
-		apply_surface(_x - gCamera.x, _y - gCamera.y, gAgentPositiveMaskImage, gScreen);
-	} else if (gUseOrganisms && _connectToOthers == NEGATIVE) {
-		apply_surface(_x - gCamera.x, _y - gCamera.y, gAgentNegativeMaskImage, gScreen);
-	} else {
+	// if (gUseOrganisms && _connectToOthers == POSITIVE) {
+	// 	apply_surface(_x - gCamera.x, _y - gCamera.y, gAgentPositiveMaskImage, gScreen);
+	// } else if (gUseOrganisms && _connectToOthers == NEGATIVE) {
+	// 	apply_surface(_x - gCamera.x, _y - gCamera.y, gAgentNegativeMaskImage, gScreen);
+	// } else {
 		apply_surface(_x - gCamera.x, _y - gCamera.y, gAgentMaskImage, gScreen);
-	}
+	// }
 
 	Uint32 pixel = getPixel32(gZoneImage, _x, _y);
 	if (pixel != SDL_MapRGB(gZoneImage->format, 0xFF, 0xFF, 0xFF)) // check if there's a "story" to display

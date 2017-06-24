@@ -675,15 +675,15 @@ void RobotAgent::show() // display on screen
 {
 	//Show the dot
 
-	if (gNiceRendering) {
-		if (gUseOrganisms && _connectToOthers == POSITIVE) {
-			apply_surface(_x - gCamera.x, _y - gCamera.y, gAgentPositiveMaskImage, gScreen);
-		} else if (gUseOrganisms && _connectToOthers == NEGATIVE) {
-			apply_surface(_x - gCamera.x, _y - gCamera.y, gAgentNegativeMaskImage, gScreen);
-		} else {
+	// if (gNiceRendering) {
+	// 	if (false && gUseOrganisms && _connectToOthers == POSITIVE) {
+	// 		apply_surface(_x - gCamera.x, _y - gCamera.y, gAgentPositiveMaskImage, gScreen);
+	// 	} else if (false && gUseOrganisms && _connectToOthers == NEGATIVE) {
+	// 		apply_surface(_x - gCamera.x, _y - gCamera.y, gAgentNegativeMaskImage, gScreen);
+	// 	} else {
 			apply_surface(_x - gCamera.x, _y - gCamera.y, gAgentMaskImage, gScreen); // OPTIONAL (agent is already visible/registered through the environment image -- but: may be useful for image capture
-		}
-	}
+	// 	}
+	// }
 
 	if(gRenderRobotId){
 		std::string str = "";
@@ -818,13 +818,13 @@ void RobotAgent::show() // display on screen
 
 void RobotAgent::registerAgent() {
 	if (gAgentRegistration && !this->_registered) {
-		if (gUseOrganisms && _connectToOthers == POSITIVE) {
-			register_surface(_x, _y, gAgentPositiveMaskImage, gEnvironmentImage, _wm->_agentId + 1000); // [!n] CONVENTION: _agentId+100 to avoid confusion with empty space (0: empty ; 1: static object; 2-99: reserved for other static objects)
-		} else if (gUseOrganisms && _connectToOthers == NEGATIVE) {
-			register_surface(_x, _y, gAgentNegativeMaskImage, gEnvironmentImage, _wm->_agentId + 1000); // [!n] CONVENTION: _agentId+100 to avoid confusion with empty space (0: empty ; 1: static object; 2-99: reserved for other static objects)
-		} else {
+		// if (gUseOrganisms && _connectToOthers == POSITIVE) {
+		// 	register_surface(_x, _y, gAgentPositiveMaskImage, gEnvironmentImage, _wm->_agentId + 1000); // [!n] CONVENTION: _agentId+100 to avoid confusion with empty space (0: empty ; 1: static object; 2-99: reserved for other static objects)
+		// } else if (gUseOrganisms && _connectToOthers == NEGATIVE) {
+		// 	register_surface(_x, _y, gAgentNegativeMaskImage, gEnvironmentImage, _wm->_agentId + 1000); // [!n] CONVENTION: _agentId+100 to avoid confusion with empty space (0: empty ; 1: static object; 2-99: reserved for other static objects)
+		// } else {
 			register_surface(_x, _y, gAgentMaskImage, gEnvironmentImage, _wm->_agentId + 1000); // [!n] CONVENTION: _agentId+100 to avoid confusion with empty space (0: empty ; 1: static object; 2-99: reserved for other static objects)
-		}
+		// }
 		this->_registered = true;
 	}
 }

@@ -664,9 +664,9 @@ void updateDisplay() {
 		else
 			apply_surface(0, 0, gZoneImage, gScreen, &gCameraParallax);
 
-		if (gNiceRendering)
-			apply_surface(0, 0, gForegroundImage, gScreen, &gCamera);
-		else
+		// if (gNiceRendering)
+		// 	apply_surface(0, 0, gForegroundImage, gScreen, &gCamera);
+		// else
 			apply_surface(0, 0, gEnvironmentImage, gScreen, &gCamera);
 
 
