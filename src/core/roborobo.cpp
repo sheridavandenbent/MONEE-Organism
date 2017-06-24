@@ -247,6 +247,7 @@ Timer timeWatch;
 
 // Organism related globals
 bool gUseOrganisms = false;
+int gOrganismBonusMode = 0;
 bool gRiverbed = false;
 int gStreamDirection = 0;
 double gStreamStrength = 1.5;
@@ -1273,6 +1274,14 @@ bool loadProperties(std::string __propertiesFilename) {
 		}
 	}
 	if(gUseOrganisms) {
+		if (gProperties.hasProperty("gOrganismBonusMode")){
+			convertFromString<int>(gOrganismBonusMode, gProperties.getProperty("gOrganismBonusMode"), std::dec);
+		}else if(gUseOrganisms){
+			std::cerr << "[MISSING] gOrganismBonusMode integer value is missing.\n";
+			if (gUseOrganisms)
+				returnValue = false;
+		}
+
 		if (gProperties.hasProperty("gAgentPositiveMaskImageFilename")){
 			gAgentPositiveMaskImageFilename = gProperties.getProperty("gAgentPositiveMaskImageFilename");
 		}else if(gUseOrganisms){

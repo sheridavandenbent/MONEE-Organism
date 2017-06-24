@@ -559,7 +559,7 @@ bool RobotAgent::isObjectCollision() {
 							if (gOrganismBonusMode == 1) {
 								this->_organism->collectPuck(g);
 							} else if (gOrganismBonusMode == 2 ) {
-								for (int i = 0; i < this->_organism->agents.size(); i++) {	
+								for (int i = 0; i < (int)this->_organism->agents.size(); i++) {	
 									wm->collectPuck(g);
 								}
 							} else {

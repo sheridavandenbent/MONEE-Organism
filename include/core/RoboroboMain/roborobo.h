@@ -104,6 +104,7 @@ extern float gEnergyPointValue; // define the value of an erngy point, i.e. how 
 extern int gEnergyPointRespawnLagMaxValue; // used to know how long will it take to an energy point to reapear
 extern std::vector<EnergyPoint> gEnergyPoints; //list of the energy points currently active
 */
+extern int gOrganismBonusMode;
 extern bool gEnergyMode;
 extern int gPuckCount;
 extern int gPuckColors;
