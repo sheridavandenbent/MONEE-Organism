@@ -187,7 +187,6 @@ void RobotAgent::reset() {
 	setCoord(x, y);
 
 	while (isCollision() && randomStart == true) {
-		std::cout << "In while loop" << std::endl;
 		//std::cout << "Collision detected on " << x << ", " << y << " rerolling" << std::endl;
 		x = (int) 20 + (ranf() * (double) (gSpawnWidth));
 		y = (int) 20 + (ranf() * (double) (gSpawnHeight));
@@ -544,24 +543,18 @@ void RobotAgent::move(int __recursiveIt) // the interface btw agent and world --
 
 
 bool RobotAgent::isObjectCollision() {
-	std::cout << "isObjectCollision" << std::endl;
 	for (int i = 0; i < gAgentWidth; i++) {
-		std::cout << "_1" << std::endl;
 		for (int j = 0; j < gAgentHeight; j++) {
-			std::cout << "_2" << std::endl;	
 			Uint32 pixel = getPixel32(gEnvironmentImage, _x+i, _y+j);
 			if (pixel != G_COLOR_WHITE) {
-				std::cout << "_3" << std::endl;	
 				Uint8 r, g, b;
 				SDL_GetRGB(pixel, gEnvironmentImage->format, &r, &g, &b);
 				if (r == 0xFF) {
-					std::cout << "_4"	 << std::endl;	
 					int id = gPuckMap[_x+i][_y+j];
 					gPucks[id].replace(true);
 
 					SimpleShellsAgentWorldModel* wm = static_cast<SimpleShellsAgentWorldModel*>(_wm);
-					if (wm) {
-						std::cout << "_5"	 << std::endl;	
+					if (wm) {	
 						if (gUseOrganisms && this->isPartOfOrganism()) {
 							this->_organism->collectPuck(g);
 						} else {
@@ -947,10 +940,6 @@ void RobotAgent::setUpConnections() {
 			y1 = this->_wm->_yReal;
 			x2 = other->_wm->_xReal;
 			y2 = other->_wm->_yReal;
-
-			//std::cout << "x1 " << x1 << " y1 " << y1 << std::endl;
-			//std::cout << "x2 " << x2 << " y2 " << y2 << std::endl;
-			//std::cout << "gap " << gConnectionGap << std::endl;
 
 			// Are they within range?
 			if (SDL_CollideBoundingCircle(gAgentMaskImage, x1, y1, gAgentMaskImage, x2, y2, gConnectionGap)) {

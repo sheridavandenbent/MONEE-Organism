@@ -84,7 +84,6 @@ void SimpleShellsAgentWorldModel::setSpeedPenalty() {
 }
 
 void SimpleShellsAgentWorldModel::collectPuck(int g) {
-	std::cout << "Picking up puck " << g << std::endl;
 	if ((double) std::accumulate(_puckCounters->begin(), _puckCounters->end(), 0) == 0) {
 		// std::cout << "FIRST PUCK AT AGE: " << this->_timeLived << std::endl;
 	}

@@ -5,11 +5,6 @@ double Controller::initialMutationStepSize = 5.0; // should be overwritten by pr
 double Controller::controllerMutationStepSizeMinimum = 0.001;
 
 Controller::Controller(){
-		int a = 7;
-	int b = 0;
-	int c = a / b;
-	std::cerr << "bitchessss " << c << std::endl;
-	exit(1);
 	this->fitness = -1;
 	this->originalFitness = -1;
 	this->id = nextId++;
@@ -17,11 +12,6 @@ Controller::Controller(){
 }
 
 Controller::Controller(vector<double> _mutationStepSizes){
-		int a = 7;
-	int b = 0;
-	int c = a / b;
-	std::cerr << "bitchessss " << c << std::endl;
-	exit(1);
 	this->fitness = -1;
 	this->originalFitness = -1;
 	this->id = nextId++;

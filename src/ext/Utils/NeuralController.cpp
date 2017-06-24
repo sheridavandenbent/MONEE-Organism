@@ -21,11 +21,6 @@
 #include "activationfunctions/ActivationFunctionTanh.h"
 
 NeuralController::NeuralController(vector<LIOReal> weights) {
-	int a = 7;
-	int b = 0;
-	int c = a / b;
-	std::cerr << "bitchessss " << c << std::endl;
-	exit(1);
 	this->weights = weights;
 	this->neuralNet = NULL;
 	this->mutationStepSizes = vector<double> (weights.size(), initialMutationStepSize);
@@ -33,11 +28,6 @@ NeuralController::NeuralController(vector<LIOReal> weights) {
 
 NeuralController::NeuralController(vector<LIOReal> weights, vector<double> mutationStepSizes) :
 	Controller(mutationStepSizes) {
-			int a = 7;
-	int b = 0;
-	int c = a / b;
-	std::cerr << "bitchessss " << c << std::endl;
-	exit(1);
 	this->weights = weights;
 	this->neuralNet = NULL;
 }
@@ -59,13 +49,6 @@ void NeuralController::SetWeight(int i, double w) {
 }
 
 void NeuralController::step(double &left, double &right, double &bonding) {
-
-		// throwing filthy errors as a filthy hack
-	int a = 7;
-	int b = 0;
-	int c = a / b;
-	std::cerr << "bitchessss " << c << std::endl;
-	exit(1);
 	// retrieve the values of the distance sensors
 	vector<LIOReal>* distances = this->getSensorValues();
 	if (distances->size() == 0) {
@@ -104,13 +87,6 @@ void NeuralController::step(double &left, double &right, double &bonding) {
 }
 
 void NeuralController::step(double &left, double &right) {
-
-	// throwing filthy errors as a filthy hack
-	int a = 7;
-	int b = 0;
-	int c = a / b;
-	std::cerr << "bitchessss " << c << std::endl;
-	
 }
 
 void NeuralController::reset() {

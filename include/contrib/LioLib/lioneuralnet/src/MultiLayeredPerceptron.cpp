@@ -19,11 +19,6 @@
 MultiLayeredPerceptron::MultiLayeredPerceptron( int __inputLayerSize, int __outputLayerSize, int __hiddenLayerSize, int __additionalHiddenLayerSize)
 {
 	// * initialize activation functions
-	int a = 7;
-	int b = 0;
-	int c = a / b;
-	std::cerr << "bitchessss " << c << std::endl;
-	exit(1);
 	applyActivationFunction = &ActivationFunctionPiecewiseLinearTanh::apply;
 	applyReadoutActivationFunction = &ActivationFunctionLinear::apply;
 
@@ -64,11 +59,6 @@ MultiLayeredPerceptron::MultiLayeredPerceptron( int __inputLayerSize, int __outp
 
 MultiLayeredPerceptron::~MultiLayeredPerceptron(void)
 {
-		int a = 7;
-	int b = 0;
-	int c = a / b;
-	std::cerr << "bitchessss " << c << std::endl;
-	exit(1);
 	delete[] _inputLayerValues;
 	delete[] _outputLayerValues;
 	delete[] _hiddenLayerValues;
