@@ -17,7 +17,7 @@
 #include "lioutils/lio_global.h"
 #include "Utils/Controller.h"
 
-#include "neuralnets/SimplePerceptron.h"
+#include "neuralnets/MultiLayeredPerceptron.h"
 #include "activationfunctions/ActivationFunctionTanh.h"
 
 
@@ -37,10 +37,11 @@ public:
 	virtual void SetWeight(int i, double w);
 	virtual vector<double>* getSensorValues();
 	virtual vector<LIOReal>* getOutputTargetVector();
-	virtual void useOutputs(vector<LIOReal> output, double &left, double &right);
+	virtual void useOutputs(vector<LIOReal> output, double &left, double &right, double &bonding);
 	
 	virtual double calculateDifference(ControllerPtr other);
 	
+	virtual void step(double &left, double &right, double &bonding);
 	virtual void step(double &left, double &right);
 	virtual void reset();
 	
@@ -54,7 +55,7 @@ public:
 
 private:
 	vector<LIOReal> weights;
-	SimplePerceptron *neuralNet;
+	MultiLayeredPerceptron *neuralNet;
 };
 
 #endif /* NEURALCONTROLLER_H_ */

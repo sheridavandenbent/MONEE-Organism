@@ -68,14 +68,14 @@ class RobotAgentWorldModel : public WorldModel
 		int _sensorCount;
 		int _floorSensor; // result is the **red** value from gZonemage at the center of the agent
 		
-		
 		std::vector<RangeSensor*> _rangeSensors;
-		
 		
 		int _age;
 		int _generation;
 	
 		double _fitnessValue; // optional
+
+		double _bonding; // value that determines if the agent wishes to join an organism, if possible.
 				
 	//public:
 		// * Initializes the variables
@@ -106,6 +106,8 @@ class RobotAgentWorldModel : public WorldModel
 		int getRobotLED_greenValue();
 		int getRobotLED_blueValue();
 		void setRobotLED_colorValues(int __r, int __g, int __b);
+
+		int getBondingValue();
 };
 
 

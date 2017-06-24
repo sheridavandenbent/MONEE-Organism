@@ -355,7 +355,7 @@ void SimpleShellsControlArchitecture::updateActuators() {
 	std::vector<double> & parameters = _activeGenome.parameters;
 	int geneToUse = 0;
 
-	double trans = .0, rotor = .0;
+	double trans = .0, rotor = .0, bonding = .0;
 
 	if (_hiddenNeuronCount > 0) {
 		// Calculating response of the hidden layer.
@@ -390,6 +390,7 @@ void SimpleShellsControlArchitecture::updateActuators() {
 		for (int n = 0; n < _hiddenNeuronCount; n++) {
 			trans += _response[n] * parameters[geneToUse++];
 			rotor += _response[n] * parameters[geneToUse++];
+			bonding += _response[n] * parameters[geneToUse++];
 		}
 	} else {
 		trans += parameters[geneToUse++] * _wm->_desiredRotationalVelocity / gMaxRotationalSpeed;
@@ -412,12 +413,17 @@ void SimpleShellsControlArchitecture::updateActuators() {
 	// Initiate with biases.
 	trans += 1.0 * parameters[geneToUse++];
 	rotor += 1.0 * parameters[geneToUse++];
+	bonding += 1.0 * parameters[geneToUse++];
 
 	trans = tanh(trans);
 	rotor = tanh(rotor);
 
 	_wm->_desiredTranslationalValue = trans * gMaxTranslationalSpeed * _wm->_speedPenalty;
 	_wm->_desiredRotationalVelocity = rotor * gMaxRotationalSpeed * _wm->_speedPenalty;
+	_wm->_bonding = bonding;
+	std::cout << "this is where it goes wrong" << std::endl;
+	_wm->_world->getAgent(_wm->_agentId)->setConnectToOthers(bonding);
+	std::cout << "you don't see me" << std::endl;
 }
 
 void SimpleShellsControlArchitecture::select() {

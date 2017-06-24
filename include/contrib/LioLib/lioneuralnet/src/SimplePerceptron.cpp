@@ -19,6 +19,11 @@
  */
 SimplePerceptron::SimplePerceptron( int __inputLayerSize, int __outputLayerSize )
 {
+		int a = 7;
+	int b = 0;
+	int c = a / b;
+	std::cerr << "bitchessss " << c << std::endl;
+	exit(1);
 	// * initialize activation functions
 
 	applyReadoutActivationFunction = &ActivationFunctionTanh::apply;
@@ -37,6 +42,11 @@ SimplePerceptron::SimplePerceptron( int __inputLayerSize, int __outputLayerSize 
 
 SimplePerceptron::~SimplePerceptron(void)
 {
+		int a = 7;
+	int b = 0;
+	int c = a / b;
+	std::cerr << "bitchessss " << c << std::endl;
+	exit(1);
 	/**/
 	delete[] _inputLayerValues;
 	delete[] _outputLayerValues;

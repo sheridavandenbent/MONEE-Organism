@@ -27,7 +27,7 @@ DEFINE_integer 'tournamentSize' '2' 'Size of tournament for parent selection. Va
 DEFINE_boolean 'excludeEnergyPucks' true 'Exclude energy pucks from task and fitness calculations'
 DEFINE_boolean 'fixedBoost' false 'If true, energy boost is a percentage of original lifetime, otherwise (the default) a percentage of remaining lifetime'
 DEFINE_boolean 'logCollisions' false 'If true, collision info is logged in (large) separate log file. No collision logging otherwise'
-DEFINE_boolean 'gBatchMode' false 'If true, show gui'
+DEFINE_boolean 'gBatchMode' false 'If false, show gui'
 DEFINE_boolean 'useSpecialiser' false 'If true, apply specialiser (make good bots steal life from bad bots)'
 DEFINE_boolean 'spawnProtection' false 'If true, bots cannot get life stolen from right after spawning'
 DEFINE_boolean 'stealFixed' false 'If true, steal a fixed amount, otherwise it is percentage'

@@ -109,3 +109,8 @@ void RobotAgentWorldModel::setRobotLED_colorValues(int __r, int __g, int __b)
 	_robotLED_green = __g;
 	_robotLED_blue = __b;
 }
+
+int RobotAgentWorldModel::getBondingValue()
+{
+	return _bonding;
+}

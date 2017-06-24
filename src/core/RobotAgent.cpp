@@ -582,41 +582,28 @@ bool RobotAgent::isObjectCollision() {
 }
 
 bool RobotAgent::isAgentCollision() {
-	std::cout << "isAgentCollision" << std::endl;
 	// Could use radio data here. Distance can be stored in the matrix. But then we'll need 3xD (?), cause two bots can move up to 2xD (?) towards each other in a single turn.
 	/* Exactly how it's done in SDL_Collide, but without surface juggling. Plus it helps, that both agents have same approximate diameter. */
 
 	int thisId = this->_wm->_agentId;
-	std::cout << "*1" << std::endl;
 	std::vector<RobotAgentPtr>* agents = gWorld->listAgents();
-	std::cout << "*2" << std::endl;
 	for (int otherId = 0; otherId < gAgentCounter; otherId++) {
-		std::cout << "*3" << std::endl;	
 		// If two bots are further away than 3 diameters, there won't be any way for them to collide in a single turn (even if they are moving towards each other at maximum (theoretically allowed) speed, they'll cover at most 1 diameter each, which leaves 1 diameter between them).
 
 		if (!isCollisionPotential(thisId, otherId)) {
-			std::cout << "*4" << std::endl;		
 			continue;
 		}
-		std::cout << "You don't see me" << std::endl;
-		if (otherId == thisId)
-			std::cout << "*5" << std::endl;		
+		if (otherId == thisId)	
 			continue;
 		// If robot is close enough to us to make the collision possible, let's take a look at his coordinates and re-calculate distance to him.
-		std::cout << "*6" << std::endl;
 		RobotAgentPtr other = agents->at(otherId);
-		std::cout << "*7" << std::endl;
 		if (gUseOrganisms && !this->isPartOfSameOrganism(other)) 
-			std::cout << "*8" << std::endl;
 			continue;
-		std::cout << "*9" << std::endl;
 
 		double xo = this->_wm->_xReal - other->_wm->_xReal;
 		double yo = this->_wm->_yReal - other->_wm->_yReal;
-		std::cout << "*10" << std::endl;
 
 		if (xo * xo + yo * yo <= gApproximateDiameterSquared * gApproximateDiameterSquared) {
-			std::cout << "*11" << std::endl;
 			SimpleShellsAgentWorldModel* tmpThisWm = static_cast<SimpleShellsAgentWorldModel*>(_wm);
 			SimpleShellsAgentWorldModel* tmpOtherWm = static_cast<SimpleShellsAgentWorldModel*>(other->_wm);
 
@@ -638,21 +625,17 @@ bool RobotAgent::isAgentCollision() {
 
 
 bool RobotAgent::isCollision() {
-	std::cout << "in collision function" << std::endl;
 	bool collision = false;
 	// * collision with border
 	if ((_x < 0) || (_x + gAgentWidth >= gAreaWidth) || (_y < 0) || (_y + gAgentHeight >= gAreaHeight))
 		collision = true;
-	std::cout << "1" << std::endl;
 	// * environment objects and other agents
 	if (isObjectCollision()) // || isAgentCollision())
 		collision = true;
-	std::cout << "2" << std::endl;
 	// Update log on collision
 	if (collision && gCollisionLogFile.is_open()) {
 		gCollisionLogFile << this->_wm->_world->getIterations() << " #" << this->_wm->_agentId << std::endl;
 	}
-	std::cout << "3" << std::endl;
 	return collision;
 }
 
@@ -972,7 +955,12 @@ void RobotAgent::setUpConnections() {
 			// Are they within range?
 			if (SDL_CollideBoundingCircle(gAgentMaskImage, x1, y1, gAgentMaskImage, x2, y2, gConnectionGap)) {
 				// connect to other robot
-				this->connectToRobot(other);
+				// ---- Mark: but only connect in case you are willing to do so.
+ 
+ 				if ((this->getConnectToOthers() == Agent::POSITIVE) && (other->getConnectToOthers() == Agent::POSITIVE)) {
+ 					// || other->getConnectToOthers() == Agent::NEUTRAL)) {
+ 					this->connectToRobot(other);
+ 				}
 
 				//				else if (this->getConnectToOthers() == Agent::NEUTRAL && other->getConnectToOthers() == Agent::POSITIVE) {
 				//					this->connectToRobot(other);

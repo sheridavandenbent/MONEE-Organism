@@ -17,10 +17,15 @@
 #include "Utils/NeuralController.h"
 #include "Utils/Util.h"
 
-#include "neuralnets/SimplePerceptron.h"
+#include "neuralnets/MultiLayeredPerceptron.h"
 #include "activationfunctions/ActivationFunctionTanh.h"
 
 NeuralController::NeuralController(vector<LIOReal> weights) {
+	int a = 7;
+	int b = 0;
+	int c = a / b;
+	std::cerr << "bitchessss " << c << std::endl;
+	exit(1);
 	this->weights = weights;
 	this->neuralNet = NULL;
 	this->mutationStepSizes = vector<double> (weights.size(), initialMutationStepSize);
@@ -28,6 +33,11 @@ NeuralController::NeuralController(vector<LIOReal> weights) {
 
 NeuralController::NeuralController(vector<LIOReal> weights, vector<double> mutationStepSizes) :
 	Controller(mutationStepSizes) {
+			int a = 7;
+	int b = 0;
+	int c = a / b;
+	std::cerr << "bitchessss " << c << std::endl;
+	exit(1);
 	this->weights = weights;
 	this->neuralNet = NULL;
 }
@@ -48,8 +58,14 @@ void NeuralController::SetWeight(int i, double w) {
 	this->weights[i] = w;
 }
 
-void NeuralController::step(double &left, double &right) {
+void NeuralController::step(double &left, double &right, double &bonding) {
 
+		// throwing filthy errors as a filthy hack
+	int a = 7;
+	int b = 0;
+	int c = a / b;
+	std::cerr << "bitchessss " << c << std::endl;
+	exit(1);
 	// retrieve the values of the distance sensors
 	vector<LIOReal>* distances = this->getSensorValues();
 	if (distances->size() == 0) {
@@ -61,8 +77,9 @@ void NeuralController::step(double &left, double &right) {
 
 	// create the neural net if it didn't exist already
 	if (neuralNet == NULL) {
-		neuralNet = new SimplePerceptron(distances->size(), actuatorValues->size());
-		neuralNet->setActivationFunction(&ActivationFunctionTanh::apply);
+		// extra output node for the bot's willingness to bond to an organism
+		neuralNet = new MultiLayeredPerceptron(distances->size(), actuatorValues->size() + 1, distances->size(), 0);
+		neuralNet->setActivationFunction(&ActivationFunctionTanh::apply, &ActivationFunctionTanh::apply);
 	}
 
 	// have the subclass compute the weights for the neural net
@@ -80,10 +97,20 @@ void NeuralController::step(double &left, double &right) {
 
 	// use the output neuron values to steer the robot
 	//vector<double> output = neuralNet->getOutputs();
-	this->useOutputs((*actuatorValues), left, right);
+	this->useOutputs((*actuatorValues), left, right, bonding);
 
 	delete distances;
 	delete actuatorValues;
+}
+
+void NeuralController::step(double &left, double &right) {
+
+	// throwing filthy errors as a filthy hack
+	int a = 7;
+	int b = 0;
+	int c = a / b;
+	std::cerr << "bitchessss " << c << std::endl;
+	
 }
 
 void NeuralController::reset() {
@@ -103,9 +130,10 @@ vector<double>* NeuralController::getSensorValues() {
 	return sensors;
 }
 
-void NeuralController::useOutputs(vector<LIOReal> output, double &left, double &right) {
+void NeuralController::useOutputs(vector<LIOReal> output, double &left, double &right, double &bonding) {
 	left = output[0];
 	right = output[1];
+	bonding = output[2];
 }
 
 ControllerPtr NeuralController::Clone() {
