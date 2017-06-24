@@ -556,7 +556,15 @@ bool RobotAgent::isObjectCollision() {
 					SimpleShellsAgentWorldModel* wm = static_cast<SimpleShellsAgentWorldModel*>(_wm);
 					if (wm) {	
 						if (gUseOrganisms && this->isPartOfOrganism()) {
-							this->_organism->collectPuck(g);
+							if (gOrganismBonusMode == 1) {
+								this->_organism->collectPuck(g);
+							} else if (gOrganismBonusMode == 2 ) {
+								for (int i = 0; i < this->_organism->agents.size(); i++) {	
+									wm->collectPuck(g);
+								}
+							} else {
+								wm->collectPuck(g);
+							}
 						} else {
 							wm->collectPuck(g);
 						}

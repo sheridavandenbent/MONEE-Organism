@@ -32,6 +32,7 @@ DEFINE_boolean 'useSpecialiser' false 'If true, apply specialiser (make good bot
 DEFINE_boolean 'spawnProtection' false 'If true, bots cannot get life stolen from right after spawning'
 DEFINE_boolean 'stealFixed' false 'If true, steal a fixed amount, otherwise it is percentage'
 DEFINE_boolean 'useOrganisms' true 'If true, use organisms'
+DEFINE_integer 'organismBonusMode' '0' 'at 0, no bonus is given. at 1, the whole group gets a bonus. at 1, the individual gets a bonus.'
 DEFINE_float 'spawnProtectDuration' '120' 'How long the spawn protection lasts'
 DEFINE_float 'stealAmount' '40' 'Amount stolen when life is stolen. Depending on stealFixed it is percentage or fixed amount of life.'
 DEFINE_float 'specialiserLifeCap' '3000' 'Life cap for stealing life, must be higher than maxLifeTime, or 0 for unlimited.'
@@ -77,6 +78,7 @@ fi
 SEEDREP=s/--RANDOMSEED/${FLAGS_seed:0:9}/g # extract only the first 9 decimals, because Roborobo can't handle int overflows
 ITERATIONREP=s/--ITERATIONS/${FLAGS_iterations}/g
 OUTPUTLOGREP=s/--OUTPUTLOG/${OUTPUTLOGFILE}/g
+ORGANISMBONUSMODE=s/--ORGANISMBONUSMODE/${FLAGS_organismBonusMode}/g
 ORGANISMSLOGREP=s/--ORGANISMSLOG/${ORGANISMSLOGFILE}/g
 ORGANISMSIZESLOGREP=s/--ORGANISMSIZESLOG/${ORGANISMSIZESLOGFILE}/g
 COLLISIONLOGREP=s/--COLLISIONLOG/${COLLISIONLOGFILE}/g
@@ -182,6 +184,7 @@ sed -e $USERANDSELREP \
     -e $STEALMARGIN \
     -e $SPECIALISERLIFECAP \
     -e $USEORGANISMS \
+    -e $ORGANISMBONUSMODE \
     -e $ORGANISMSLOGREP \
     -e $ORGANISMSIZESLOGREP \
     -e $BATCHMODE \
