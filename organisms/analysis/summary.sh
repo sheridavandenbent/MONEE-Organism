@@ -15,7 +15,7 @@ do
     echo "handeling ${d%/}"
     (
         cd $d && 
-        for f in `find * -size +0 -type f -iname "*.png" -o -iname "*.stats" | grep -v \* | grep -vE '[0-9]{5}'`
+        for f in `find * -size +0 -type f -iname "*.png" -o -iname "*.stats" -o -iname "*.lives" | grep -v \* | grep -vE '[0-9]{5}'`
         do
             cp "${f}" "../summary/${d%/}_$f"
         done
